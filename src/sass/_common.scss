@@ -1,0 +1,10 @@
+body {
+     background: url('../assets/img/bg_8px.jpg') no-repeat center center fixed;
+     -webkit-background-size: cover;
+     -moz-background-size: cover;
+     -o-background-size: cover;
+     background-size: cover;
+
+     // workaround for bootstrap .container-fluid causing horizontal scrollbar appearing
+     overflow-x: hidden;
+ }
