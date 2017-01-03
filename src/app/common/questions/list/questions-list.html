@@ -2,12 +2,12 @@
     <div class="col-md-offset-3 col-md-6">
         <div class="question panel panel-success">
             <div class="panel-heading text-center">
-                {{entries.question}}
+                {{$ctrl.entries.question}}
             </div>
 
             <div class="panel-body">
                 <div class="list-group list-group-hxf">
-                    <ul ng-repeat="entry in entries.choices" class="list-group-item choices">
+                    <ul ng-repeat="entry in $ctrl.entries.choices" class="list-group-item choices">
 
                         <input id="{{entry}}" type="radio" name="answerRadio" ng-checked="$index == checkedQuestion()" ng-click="onRadioChanged({idx:$index})" />
                         <label for="{{entry}}">

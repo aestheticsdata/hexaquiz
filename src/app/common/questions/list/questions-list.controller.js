@@ -1,6 +1,7 @@
-function QuestionsListController() {
+function QuestionsListController($scope) {
     this.$onInit = function () {
         console.log('QuestionsListController');
+        this.entries = this.questions[0];
     };
 }
 

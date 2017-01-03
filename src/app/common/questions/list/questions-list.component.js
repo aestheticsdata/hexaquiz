@@ -1,4 +1,7 @@
 var questionsList = {
+    bindings: {
+        questions:'<'
+    },
     templateUrl: './questions-list.html',
     controller: 'QuestionsListController'
 };
