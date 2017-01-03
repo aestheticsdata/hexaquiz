@@ -20,8 +20,6 @@ angular
                                     console.log(res);
 
                                     QuestionsService.setQuestions(res);
-
-                                    // $state.go('quiz', {idx:0}); // go to first question
                                 }
                             )
                             .catch(
@@ -31,5 +29,5 @@ angular
                             )
                     }
                 }
-            })
+            });
     });

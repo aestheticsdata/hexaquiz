@@ -34,8 +34,6 @@ angular.module('hexaquiz.common.questions', ['ui.router']).config(["$stateProvid
                     console.log(res);
 
                     QuestionsService.setQuestions(res);
-
-                    // $state.go('quiz', {idx:0}); // go to first question
                 }).catch(function onError(err) {
                     console.log('error while retrieving questions : ', err);
                 });
@@ -169,8 +167,48 @@ function QuestionsService($http) {
 'use strict';
 'use strict';
 
+var questionsList = {
+    templateUrl: './questions-list.html',
+    controller: 'QuestionsListController'
+};
+
+angular.module('hexaquiz.common.questions').component('questionsList', questionsList);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+function QuestionsListController() {
+    console.log('QuestionsListController');
+}
+
+angular.module('hexaquiz.common.questions').controller('QuestionsListController', QuestionsListController);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+var questionsNav = {
+    templateUrl: './questions-nav.html',
+    controller: 'QuestionsNavController'
+};
+
+angular.module('hexaquiz.common.questions').component('questionsNav', questionsNav);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+function QuestionsNavController() {
+    console.log('QuestionsNavController');
+}
+
+angular.module('hexaquiz.common.questions').controller('QuestionsNavController', QuestionsNavController);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
 angular.module('hexaquiz.templates', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('./root.html', '<div class="root"><div ui-view></div></div>');
   $templateCache.put('./app.html', '<div class="root"><div class="app">my quiz app<div ui-view=""></div></div></div>');
-  $templateCache.put('./questions.html', '<div class="questions">hello questions</div>');
+  $templateCache.put('./questions.html', '<div class="questions"><questions-nav></questions-nav><questions-list></questions-list></div>');
+  $templateCache.put('./questions-list.html', '<div class="row"><div class="col-md-offset-3 col-md-6"><div class="question panel panel-success"><div class="panel-heading text-center">{{entries.question}}</div><div class="panel-body"><div class="list-group list-group-hxf"><ul ng-repeat="entry in entries.choices" class="list-group-item choices"><input id="{{entry}}" type="radio" name="answerRadio" ng-checked="$index == checkedQuestion()" ng-click="onRadioChanged({idx:$index})"><label for="{{entry}}"><span class="entry">{{entry}}</span></label></ul></div></div></div></div></div>');
+  $templateCache.put('./questions-nav.html', '<div class="questions"><div class="container-fluid"><div class="row buttons-prev-next-hxf"><div class="col-xs-offset-3 col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-disabled="isPrevDisabled" ng-click="prev()">PREVIOUS</button></div><div class="col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-disabled="isNextDisabled" ng-click="next()">NEXT</button></div></div></div></div>');
 }]);})(window.angular);
