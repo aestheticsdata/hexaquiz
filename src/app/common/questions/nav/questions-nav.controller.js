@@ -1,5 +1,7 @@
 function QuestionsNavController() {
-    console.log('QuestionsNavController');
+    this.$onInit = function () {
+        console.log('QuestionsNavController');
+    }
 }
 
 angular

@@ -1,5 +1,7 @@
 function AppController() {
-    console.log('AppController');
+    this.$onInit = function () {
+        console.log('AppController');
+    }
 }
 
 angular

@@ -1,5 +1,7 @@
 function QuestionsListController() {
-    console.log('QuestionsListController');
+    this.$onInit = function () {
+        console.log('QuestionsListController');
+    };
 }
 
 angular
