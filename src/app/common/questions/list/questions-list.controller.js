@@ -1,7 +1,8 @@
-function QuestionsListController($scope) {
+function QuestionsListController() {
     this.$onInit = function () {
         console.log('QuestionsListController');
-        this.entries = this.questions[0];
+        this.entries = this.questions[this.currentIndex];
+        console.log('current index : ', this.currentIndex);
     };
 }
 

@@ -2,9 +2,6 @@ angular
     .module('hexaquiz.common.questions', [
         'ui.router'
     ])
-    .config(function ($compileProvider) {
-        //$compileProvider.preAssignBindingsEnabled(true);
-    })
     .config(function ($stateProvider) {
         $stateProvider
             .state('questions', {
@@ -12,11 +9,12 @@ angular
                 url: '/questions/:idx',
                 component: 'questions',
                 resolve: {
+                    currentIndex: function ($transition$) {
+                        return $transition$.params().idx;
+                    },
                     questions: function (QuestionsService) {
 
                         console.log('resolve questions');
-
-                        // return 'cool';
 
                         return QuestionsService.retrieveQuestions()
                             .then(

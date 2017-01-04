@@ -1,5 +1,6 @@
 var questionsList = {
     bindings: {
+        currentIndex:'<',
         questions:'<'
     },
     templateUrl: './questions-list.html',

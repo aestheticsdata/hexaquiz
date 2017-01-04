@@ -1,5 +1,6 @@
 var questions = {
     bindings: {
+        currentIndex:'<',
         questions:'<'
     },
     templateUrl: './questions.html',

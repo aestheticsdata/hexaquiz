@@ -23,6 +23,7 @@ const argv = yargs.argv;
 const paths = {
     dist: './dist/',
     styles:    `${srcpath}/sass/*.scss`,
+    bootstrap: 'node_modules/bootstrap/dist/**/*',
     scripts:   `${srcpath}/app/**/*.js`,
     templates: `${srcpath}/app/**/*.html`,
     modules: [
@@ -35,6 +36,7 @@ const paths = {
     static: [
         `${srcpath}/index.html`,
         `${srcpath}/mock_data/*`,
+        `${srcpath}/assets/**/*`,
         //`${srcpath}/fonts/**/*`,
         //`${srcpath}/img/**/*`
     ]
@@ -73,6 +75,11 @@ gulp.task('styles', () => {
         .pipe(gulp.dest(paths.dist + 'css/'));
 });
 
+gulp.task('bootstrap', () => {
+    return gulp.src([paths.bootstrap], {base:'node_modules'})
+        .pipe(gulp.dest(paths.dist));
+});
+
 
 gulp.task('scripts', ['modules'], () => {
     return gulp.src([
@@ -91,7 +98,7 @@ gulp.task('scripts', ['modules'], () => {
 });
 
 
-gulp.task('copy', ['clean'], () => {
+gulp.task('copy', ['clean', 'bootstrap'], () => {
     return gulp.src(paths.static, { base: 'src' })
         .pipe(gulp.dest(paths.dist));
 });
