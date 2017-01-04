@@ -1,3 +1,3 @@
 # hexaquiz
 
-app made with Angular 1.5+ components-based
+app made with Angular 1.5+ components-based - work in progress
