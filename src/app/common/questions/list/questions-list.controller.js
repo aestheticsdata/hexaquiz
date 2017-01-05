@@ -1,8 +1,27 @@
-function QuestionsListController() {
-    this.$onInit = function () {
-        var currentIndex = this.transitionAlias.params().idx;
+function QuestionsListController(QuestionsService) {
+
+    var ctrl = this;
+
+    ctrl.$onInit = function () {
+
+        var currentIndex = ctrl.transitionAlias.params().idx;
+        // questionsLength = QuestionsService.getQuestions().length;
+
         console.log('QuestionsListController');
-        this.entries = this.questions[currentIndex];
+
+        ctrl.entries = this.questions[currentIndex];
+
+        console.log(QuestionsService.currentAnswers);
+
+        ctrl.checkedQuestion = function () {
+            console.log('checkedQuestion');
+            return QuestionsService.currentAnswers[currentIndex] === -1 ? 0 : QuestionsService.currentAnswers[currentIndex];
+        };
+
+        ctrl.onRadioChanged = function (idx) {
+            console.log('radio has changed : ', idx);
+            QuestionsService.currentAnswers[currentIndex] = idx;
+        };
     };
 }
 

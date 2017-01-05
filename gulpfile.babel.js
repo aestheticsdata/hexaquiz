@@ -75,10 +75,10 @@ gulp.task('styles', () => {
         .pipe(gulp.dest(paths.dist + 'css/'));
 });
 
-gulp.task('bootstrap', () => {
-    return gulp.src([paths.bootstrap], {base:'node_modules'})
-        .pipe(gulp.dest(paths.dist));
-});
+// gulp.task('bootstrap', () => {
+//     return gulp.src([paths.bootstrap], {base:'node_modules'})
+//         .pipe(gulp.dest(paths.dist));
+// });
 
 
 gulp.task('scripts', ['modules'], () => {
@@ -98,7 +98,8 @@ gulp.task('scripts', ['modules'], () => {
 });
 
 
-gulp.task('copy', ['clean', 'bootstrap'], () => {
+// gulp.task('copy', ['clean', 'bootstrap'], () => {
+gulp.task('copy', ['clean'], () => {
     return gulp.src(paths.static, { base: 'src' })
         .pipe(gulp.dest(paths.dist));
 });

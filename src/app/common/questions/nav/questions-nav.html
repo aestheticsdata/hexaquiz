@@ -2,10 +2,10 @@
     <div class="container-fluid">
         <div class="row buttons-prev-next-hxf">
             <div class="col-xs-offset-3 col-xs-3">
-                <button class="btn btn-primary btn-lg btn-block" ng-disabled="isPrevDisabled" ng-click="prev()">PREVIOUS</button>
+                <button class="btn btn-primary btn-lg btn-block" ng-disabled="$ctrl.isPrevDisabled" ng-click="$ctrl.prev()">PREVIOUS</button>
             </div>
             <div class="col-xs-3">
-                <button class="btn btn-primary btn-lg btn-block" ng-disabled="isNextDisabled" ng-click="next()">NEXT</button>
+                <button class="btn btn-primary btn-lg btn-block" ng-disabled="$ctrl.isNextDisabled" ng-click="$ctrl.next()">NEXT</button>
             </div>
         </div>
     </div>
