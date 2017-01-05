@@ -25,9 +25,8 @@ angular.module('hexaquiz.common.questions', ['ui.router']).config(["$stateProvid
         url: '/questions/:idx',
         component: 'questions',
         resolve: {
-            currentIndex: ["$transition$", function currentIndex($transition$) {
-                return $transition$.params().idx;
-            }],
+            transitionAlias: '$transition$', // see https://github.com/angular-ui/ui-router/issues/3110
+
             questions: ["QuestionsService", function questions(QuestionsService) {
 
                 console.log('resolve questions');
@@ -89,7 +88,7 @@ angular.module('hexaquiz.common').controller('AppController', AppController);})(
 
 var questions = {
     bindings: {
-        currentIndex: '<',
+        transitionAlias: '<',
         questions: '<'
     },
     templateUrl: './questions.html',
@@ -186,7 +185,7 @@ function QuestionsService($http) {
 
 var questionsList = {
     bindings: {
-        currentIndex: '<',
+        transitionAlias: '<',
         questions: '<'
     },
     templateUrl: './questions-list.html',
@@ -200,9 +199,9 @@ angular.module('hexaquiz.common.questions').component('questionsList', questions
 
 function QuestionsListController() {
     this.$onInit = function () {
+        var currentIndex = this.transitionAlias.params().idx;
         console.log('QuestionsListController');
-        this.entries = this.questions[this.currentIndex];
-        console.log('current index : ', this.currentIndex);
+        this.entries = this.questions[currentIndex];
     };
 }
 
@@ -235,7 +234,7 @@ angular.module('hexaquiz.common.questions').controller('QuestionsNavController',
 angular.module('hexaquiz.templates', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('./root.html', '<div class="root"><div ui-view></div></div>');
   $templateCache.put('./app.html', '<div class="root"><div class="app">my quiz app<div ui-view=""></div></div></div>');
-  $templateCache.put('./questions.html', '<div class="questions"><questions-nav></questions-nav><questions-list questions="$ctrl.questions" current-index="$ctrl.currentIndex"></questions-list></div>');
+  $templateCache.put('./questions.html', '<div class="questions"><questions-nav></questions-nav><questions-list questions="$ctrl.questions" transition-alias="$ctrl.transitionAlias"></questions-list></div>');
   $templateCache.put('./questions-list.html', '<div class="row"><div class="col-md-offset-3 col-md-6"><div class="question panel panel-success"><div class="panel-heading text-center">{{$ctrl.entries.question}}</div><div class="panel-body"><div class="list-group list-group-hxf"><ul ng-repeat="entry in $ctrl.entries.choices" class="list-group-item choices"><input id="{{entry}}" type="radio" name="answerRadio" ng-checked="$index == checkedQuestion()" ng-click="onRadioChanged({idx:$index})"><label for="{{entry}}"><span class="entry">{{entry}}</span></label></ul></div></div></div></div></div>');
   $templateCache.put('./questions-nav.html', '<div class="questions"><div class="container-fluid"><div class="row buttons-prev-next-hxf"><div class="col-xs-offset-3 col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-disabled="isPrevDisabled" ng-click="prev()">PREVIOUS</button></div><div class="col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-disabled="isNextDisabled" ng-click="next()">NEXT</button></div></div></div></div>');
 }]);})(window.angular);

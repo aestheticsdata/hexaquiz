@@ -9,9 +9,8 @@ angular
                 url: '/questions/:idx',
                 component: 'questions',
                 resolve: {
-                    currentIndex: function ($transition$) {
-                        return $transition$.params().idx;
-                    },
+                    transitionAlias: '$transition$', // see https://github.com/angular-ui/ui-router/issues/3110
+
                     questions: function (QuestionsService) {
 
                         console.log('resolve questions');

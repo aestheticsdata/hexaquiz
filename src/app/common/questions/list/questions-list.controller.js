@@ -1,8 +1,8 @@
 function QuestionsListController() {
     this.$onInit = function () {
+        var currentIndex = this.transitionAlias.params().idx;
         console.log('QuestionsListController');
-        this.entries = this.questions[this.currentIndex];
-        console.log('current index : ', this.currentIndex);
+        this.entries = this.questions[currentIndex];
     };
 }
 
