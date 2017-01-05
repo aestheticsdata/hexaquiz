@@ -14,12 +14,10 @@ function QuestionsListController(QuestionsService) {
         console.log(QuestionsService.currentAnswers);
 
         ctrl.checkedQuestion = function () {
-            console.log('checkedQuestion');
             return QuestionsService.currentAnswers[currentIndex] === -1 ? 0 : QuestionsService.currentAnswers[currentIndex];
         };
 
         ctrl.onRadioChanged = function (idx) {
-            console.log('radio has changed : ', idx);
             QuestionsService.currentAnswers[currentIndex] = idx;
         };
     };
