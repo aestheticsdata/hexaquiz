@@ -1,7 +1,8 @@
 var questionsNav = {
     bindings: {
-        transitionAlias:'<',
-        questions:'<'
+        questions:'<',
+        isPrevDisabled:'<',
+        onNavClick:'&'
     },
     templateUrl: './questions-nav.html',
     controller: 'QuestionsNavController'

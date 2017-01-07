@@ -1,5 +1,21 @@
 <div class="questions">
-    <questions-nav    questions="$ctrl.questions" transition-alias="$ctrl.transitionAlias"></questions-nav>
-    <questions-list   questions="$ctrl.questions" transition-alias="$ctrl.transitionAlias"></questions-list>
-    <questions-ribbon questions="$ctrl.questions" transition-alias="$ctrl.transitionAlias"></questions-ribbon>
+
+    <questions-nav    questions="$ctrl.questions"
+                      is-prev-disabled="$ctrl.isPrevDisabled"
+                      on-nav-click="$ctrl.navTo($event)">
+
+    </questions-nav>
+
+
+    <questions-list   questions="$ctrl.questions"
+                      transition-alias="$ctrl.transitionAlias">
+
+    </questions-list>
+
+
+    <questions-ribbon questions="$ctrl.questions"
+                      transition-alias="$ctrl.transitionAlias">
+
+    </questions-ribbon>
+
 </div>

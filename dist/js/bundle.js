@@ -100,16 +100,42 @@ angular.module('hexaquiz.common.questions').component('questions', questions);})
 'use strict';
 'use strict';
 
-QuestionsController.$inject = ["$transitions"];
-function QuestionsController($transitions) {
+QuestionsController.$inject = ["$transitions", "$state"];
+function QuestionsController($transitions, $state) {
 
     var ctrl = this;
+    var currentIndex, questionsLength;
 
     ctrl.$onInit = function () {
 
         console.log('QuestionsController');
         console.log($transitions);
         console.log('this.questions : ', ctrl.questions);
+
+        questionsLength = ctrl.questions.length;
+
+        currentIndex = ctrl.transitionAlias.params().idx;
+
+        ctrl.isPrevDisabled = parseInt(currentIndex) === 0;
+    };
+
+    ctrl.navTo = function (e) {
+        switch (e.dir) {
+            case 'prev':
+                $state.go('questions', {
+                    idx: currentIndex === 0 ? currentIndex : parseInt(currentIndex - 1)
+                });
+                break;
+            case 'next':
+                if (parseInt(currentIndex) === questionsLength - 1) {
+                    // $state.go('score');
+                } else {
+                    $state.go('questions', {
+                        idx: parseInt(currentIndex) + 1
+                    });
+                }
+                break;
+        }
     };
 }
 
@@ -223,6 +249,11 @@ function QuestionsListController(QuestionsService) {
         ctrl.onRadioChanged = function (idx) {
             QuestionsService.currentAnswers[currentIndex] = idx;
         };
+
+        // ctrl.$onChanges = function (changes) {
+        //     console.log('changes');
+        //     console.log(changes);
+        // }
     };
 }
 
@@ -233,8 +264,9 @@ angular.module('hexaquiz.common.questions').controller('QuestionsListController'
 
 var questionsNav = {
     bindings: {
-        transitionAlias: '<',
-        questions: '<'
+        questions: '<',
+        isPrevDisabled: '<',
+        onNavClick: '&'
     },
     templateUrl: './questions-nav.html',
     controller: 'QuestionsNavController'
@@ -245,32 +277,29 @@ angular.module('hexaquiz.common.questions').component('questionsNav', questionsN
 'use strict';
 'use strict';
 
-QuestionsNavController.$inject = ["$state"];
-function QuestionsNavController($state) {
+function QuestionsNavController() {
 
     var ctrl = this;
 
     ctrl.$onInit = function () {
 
-        var currentIndex = this.transitionAlias.params().idx,
-            questionsLength = this.questions.length;
-
         console.log('QuestionsNavController');
-
-        ctrl.isPrevDisabled = parseInt(currentIndex) === 0;
-        ctrl.isNextDisabled = false;
 
         ctrl.prev = function () {
             console.log('previous btn');
-            $state.go('questions', { idx: currentIndex === 0 ? currentIndex : parseInt(currentIndex - 1) });
+            ctrl.onNavClick({
+                $event: {
+                    dir: 'prev'
+                }
+            });
         };
 
         ctrl.next = function () {
-            if (parseInt(currentIndex) === questionsLength - 1) {
-                $state.go('score');
-            } else {
-                $state.go('questions', { idx: parseInt(currentIndex) + 1 });
-            }
+            ctrl.onNavClick({
+                $event: {
+                    dir: 'next'
+                }
+            });
         };
     };
 }
@@ -314,8 +343,8 @@ angular.module('hexaquiz.common.questions').controller('QuestionsRibbonControlle
 angular.module('hexaquiz.templates', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('./root.html', '<div class="root"><div ui-view></div></div>');
   $templateCache.put('./app.html', '<div class="root"><div class="app">my quiz app<div ui-view=""></div></div></div>');
-  $templateCache.put('./questions.html', '<div class="questions"><questions-nav questions="$ctrl.questions" transition-alias="$ctrl.transitionAlias"></questions-nav><questions-list questions="$ctrl.questions" transition-alias="$ctrl.transitionAlias"></questions-list><questions-ribbon questions="$ctrl.questions" transition-alias="$ctrl.transitionAlias"></questions-ribbon></div>');
+  $templateCache.put('./questions.html', '<div class="questions"><questions-nav questions="$ctrl.questions" is-prev-disabled="$ctrl.isPrevDisabled" on-nav-click="$ctrl.navTo($event)"></questions-nav><questions-list questions="$ctrl.questions" transition-alias="$ctrl.transitionAlias"></questions-list><questions-ribbon questions="$ctrl.questions" transition-alias="$ctrl.transitionAlias"></questions-ribbon></div>');
   $templateCache.put('./questions-list.html', '<div class="row"><div class="col-md-offset-3 col-md-6"><div class="question panel panel-success"><div class="panel-heading text-center">{{$ctrl.entries.question}}</div><div class="panel-body"><div class="list-group list-group-hxf"><ul ng-repeat="entry in $ctrl.entries.choices" class="list-group-item choices"><input id="{{entry}}" type="radio" name="answerRadio" ng-checked="$index == $ctrl.checkedQuestion()" ng-click="$ctrl.onRadioChanged($index)"><label for="{{entry}}"><span class="entry">{{entry}}</span></label></ul></div></div></div></div></div>');
-  $templateCache.put('./questions-nav.html', '<div class="questions"><div class="container-fluid"><div class="row buttons-prev-next-hxf"><div class="col-xs-offset-3 col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-disabled="$ctrl.isPrevDisabled" ng-click="$ctrl.prev()">PREVIOUS</button></div><div class="col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-disabled="$ctrl.isNextDisabled" ng-click="$ctrl.next()">NEXT</button></div></div></div></div>');
+  $templateCache.put('./questions-nav.html', '<div class="questions"><div class="container-fluid"><div class="row buttons-prev-next-hxf"><div class="col-xs-offset-3 col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.prev()" ng-disabled="$ctrl.isPrevDisabled">PREVIOUS</button></div><div class="col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.next()">NEXT</button></div></div></div></div>');
   $templateCache.put('./questions-ribbon.html', '<div class="row"><div class="col-xs-12"><div class="text-center counter-hxf">{{$ctrl.currentQuestionIdx}}/{{$ctrl.totalQuestionIdx}}</div></div></div>w');
 }]);})(window.angular);

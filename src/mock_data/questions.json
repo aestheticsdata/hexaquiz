@@ -1,7 +1,7 @@
 [
         {
             "question": "What is Backbone.js ?",
-            "choices": ["a car", "a MVC framework", "a bone", "an egg", "nothing"],
+            "choices": ["a car", "a js library", "a bone", "an egg", "nothing"],
             "correctAnswer": 1
         },
         {

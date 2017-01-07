@@ -20,6 +20,12 @@ function QuestionsListController(QuestionsService) {
         ctrl.onRadioChanged = function (idx) {
             QuestionsService.currentAnswers[currentIndex] = idx;
         };
+
+        // ctrl.$onChanges = function (changes) {
+        //     console.log('changes');
+        //     console.log(changes);
+        // }
+
     };
 }
 
