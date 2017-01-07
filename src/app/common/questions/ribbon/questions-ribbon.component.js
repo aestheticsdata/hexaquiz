@@ -1,7 +1,6 @@
 var questionsRibbon = {
     bindings:{
-        transitionAlias:'<',
-        questions:'<'
+        indexes:'<'
     },
     templateUrl:'./questions-ribbon.html',
     controller:'QuestionsRibbonController'

@@ -1,8 +1,8 @@
 function QuestionsController($transitions, $state) {
 
-    var ctrl = this;
-    var currentIndex,
-        questionsLength;
+    var ctrl = this,
+        currentIndex = -1,
+        questionsLength = -1;
 
     ctrl.$onInit = function () {
 
@@ -16,6 +16,11 @@ function QuestionsController($transitions, $state) {
         currentIndex = ctrl.transitionAlias.params().idx;
 
         ctrl.isPrevDisabled = (parseInt(currentIndex) === 0);
+
+        ctrl.ribbonIndexes = {
+            current:parseInt(currentIndex, 10)+1,
+            total:questionsLength
+        }
     };
 
     ctrl.navTo = function (e) {
@@ -36,7 +41,6 @@ function QuestionsController($transitions, $state) {
                 break;
         }
     }
-
 
 }
 

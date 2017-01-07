@@ -103,8 +103,9 @@ angular.module('hexaquiz.common.questions').component('questions', questions);})
 QuestionsController.$inject = ["$transitions", "$state"];
 function QuestionsController($transitions, $state) {
 
-    var ctrl = this;
-    var currentIndex, questionsLength;
+    var ctrl = this,
+        currentIndex = -1,
+        questionsLength = -1;
 
     ctrl.$onInit = function () {
 
@@ -117,6 +118,11 @@ function QuestionsController($transitions, $state) {
         currentIndex = ctrl.transitionAlias.params().idx;
 
         ctrl.isPrevDisabled = parseInt(currentIndex) === 0;
+
+        ctrl.ribbonIndexes = {
+            current: parseInt(currentIndex, 10) + 1,
+            total: questionsLength
+        };
     };
 
     ctrl.navTo = function (e) {
@@ -311,8 +317,7 @@ angular.module('hexaquiz.common.questions').controller('QuestionsNavController',
 
 var questionsRibbon = {
     bindings: {
-        transitionAlias: '<',
-        questions: '<'
+        indexes: '<'
     },
     templateUrl: './questions-ribbon.html',
     controller: 'QuestionsRibbonController'
@@ -325,13 +330,12 @@ angular.module('hexaquiz.common.questions').component('questionsRibbon', questio
 
 function QuestionsRibbonController() {
 
+    var ctrl = this;
+
     this.$onInit = function () {
 
-        var questionsLength = this.questions.length,
-            currentIndex = this.transitionAlias.params().idx;
-
-        this.currentQuestionIdx = parseInt(currentIndex, 10) + 1; // array 0 based
-        this.totalQuestionIdx = questionsLength;
+        ctrl.currentQuestionIdx = ctrl.indexes.current;
+        ctrl.totalQuestionIdx = ctrl.indexes.total;
     };
 }
 
@@ -343,7 +347,7 @@ angular.module('hexaquiz.common.questions').controller('QuestionsRibbonControlle
 angular.module('hexaquiz.templates', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('./root.html', '<div class="root"><div ui-view></div></div>');
   $templateCache.put('./app.html', '<div class="root"><div class="app">my quiz app<div ui-view=""></div></div></div>');
-  $templateCache.put('./questions.html', '<div class="questions"><questions-nav questions="$ctrl.questions" is-prev-disabled="$ctrl.isPrevDisabled" on-nav-click="$ctrl.navTo($event)"></questions-nav><questions-list questions="$ctrl.questions" transition-alias="$ctrl.transitionAlias"></questions-list><questions-ribbon questions="$ctrl.questions" transition-alias="$ctrl.transitionAlias"></questions-ribbon></div>');
+  $templateCache.put('./questions.html', '<div class="questions"><questions-nav questions="$ctrl.questions" is-prev-disabled="$ctrl.isPrevDisabled" on-nav-click="$ctrl.navTo($event)"></questions-nav><questions-list questions="$ctrl.questions" transition-alias="$ctrl.transitionAlias"></questions-list><questions-ribbon indexes="$ctrl.ribbonIndexes"></questions-ribbon></div>');
   $templateCache.put('./questions-list.html', '<div class="row"><div class="col-md-offset-3 col-md-6"><div class="question panel panel-success"><div class="panel-heading text-center">{{$ctrl.entries.question}}</div><div class="panel-body"><div class="list-group list-group-hxf"><ul ng-repeat="entry in $ctrl.entries.choices" class="list-group-item choices"><input id="{{entry}}" type="radio" name="answerRadio" ng-checked="$index == $ctrl.checkedQuestion()" ng-click="$ctrl.onRadioChanged($index)"><label for="{{entry}}"><span class="entry">{{entry}}</span></label></ul></div></div></div></div></div>');
   $templateCache.put('./questions-nav.html', '<div class="questions"><div class="container-fluid"><div class="row buttons-prev-next-hxf"><div class="col-xs-offset-3 col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.prev()" ng-disabled="$ctrl.isPrevDisabled">PREVIOUS</button></div><div class="col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.next()">NEXT</button></div></div></div></div>');
   $templateCache.put('./questions-ribbon.html', '<div class="row"><div class="col-xs-12"><div class="text-center counter-hxf">{{$ctrl.currentQuestionIdx}}/{{$ctrl.totalQuestionIdx}}</div></div></div>w');
