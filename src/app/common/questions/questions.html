@@ -6,8 +6,8 @@
     </questions-nav>
 
 
-    <questions-list   questions="$ctrl.questions"
-                      transition-alias="$ctrl.transitionAlias">
+    <questions-list   question="$ctrl.questionsListQuestion"
+                      on-radio-changed="$ctrl.changeSelected($event)">
     </questions-list>
 
 

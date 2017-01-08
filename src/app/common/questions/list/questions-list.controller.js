@@ -4,28 +4,23 @@ function QuestionsListController(QuestionsService) {
 
     ctrl.$onInit = function () {
 
-        var currentIndex = ctrl.transitionAlias.params().idx;
+        // var currentIndex = ctrl.transitionAlias.params().idx;
         // questionsLength = QuestionsService.getQuestions().length;
 
         console.log('QuestionsListController');
 
-        ctrl.entries = this.questions[currentIndex];
+        ctrl.entries = ctrl.question.current;
 
-        console.log(QuestionsService.currentAnswers);
+        ctrl.checkedQuestion = ctrl.question.checkedQuestion();
 
-        ctrl.checkedQuestion = function () {
-            return QuestionsService.currentAnswers[currentIndex] === -1 ? 0 : QuestionsService.currentAnswers[currentIndex];
+        ctrl.radioHasChanged = function (idx) {
+            console.log('radio has changed : ', idx);
+            ctrl.onRadioChanged({
+                $event: {
+                    idx: idx
+                }
+            })
         };
-
-        ctrl.onRadioChanged = function (idx) {
-            QuestionsService.currentAnswers[currentIndex] = idx;
-        };
-
-        // ctrl.$onChanges = function (changes) {
-        //     console.log('changes');
-        //     console.log(changes);
-        // }
-
     };
 }
 

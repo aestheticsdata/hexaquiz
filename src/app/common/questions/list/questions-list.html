@@ -13,8 +13,8 @@
                         <input id="{{entry}}"
                                type="radio"
                                name="answerRadio"
-                               ng-checked="$index == $ctrl.checkedQuestion()"
-                               ng-click="$ctrl.onRadioChanged($index)" />
+                               ng-checked="$index == $ctrl.checkedQuestion"
+                               ng-click="$ctrl.radioHasChanged($index)" />
                         <label for="{{entry}}">
                             <span class="entry">{{entry}}</span>
                         </label>

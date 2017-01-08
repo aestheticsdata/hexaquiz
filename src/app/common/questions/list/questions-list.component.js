@@ -1,7 +1,7 @@
 var questionsList = {
     bindings: {
-        transitionAlias:'<',
-        questions:'<'
+        question:'<',
+        onRadioChanged:'&'
     },
     templateUrl: './questions-list.html',
     controller: 'QuestionsListController'

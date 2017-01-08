@@ -1,4 +1,4 @@
-function QuestionsController($transitions, $state) {
+function QuestionsController($transitions, $state, QuestionsService) {
 
     var ctrl = this,
         currentIndex = -1,
@@ -15,12 +15,32 @@ function QuestionsController($transitions, $state) {
 
         currentIndex = ctrl.transitionAlias.params().idx;
 
+        /// nav ///
         ctrl.isPrevDisabled = (parseInt(currentIndex) === 0);
+        ///////////
 
+        /// questions list ///
+        ctrl.questionsListQuestion = {
+            current: ctrl.questions[currentIndex],
+            checkedQuestion: function () {
+                return QuestionsService.currentAnswers[currentIndex] === -1 ? 0 : QuestionsService.currentAnswers[currentIndex];
+            }
+        };
+
+        // ctrl.changeSelected = function (e) {
+        //     console.log('change selected');
+        //     console.log(e.idx);
+        //     console.log(currentIndex);
+        //     QuestionsService.currentAnswers[currentIndex] = e.idx;
+        // };
+        //////////////////////
+
+        /// questions ribbon ///
         ctrl.ribbonIndexes = {
             current:parseInt(currentIndex, 10)+1,
             total:questionsLength
-        }
+        };
+        ////////////////////////
     };
 
     ctrl.navTo = function (e) {
@@ -40,6 +60,10 @@ function QuestionsController($transitions, $state) {
                 }
                 break;
         }
+    };
+
+    ctrl.changeSelected = function (e) {
+        QuestionsService.currentAnswers[currentIndex] = e.idx;
     }
 
 }
