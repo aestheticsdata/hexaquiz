@@ -7,6 +7,11 @@ angular.module('hexaquiz', ['hexaquiz.common', 'hexaquiz.components', 'hexaquiz.
 'use strict';
 'use strict';
 
+angular.module('hexaquiz.components', []);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
 angular.module('hexaquiz.common', ['ui.router', 'hexaquiz.common.questions']).run(["$state", function ($state) {
     $state.go('app');
 }]);})(window.angular);
@@ -14,37 +19,7 @@ angular.module('hexaquiz.common', ['ui.router', 'hexaquiz.common.questions']).ru
 'use strict';
 'use strict';
 
-angular.module('hexaquiz.components', []);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-angular.module('hexaquiz.common.questions', ['ui.router']).config(["$stateProvider", function ($stateProvider) {
-    $stateProvider.state('questions', {
-        parent: 'app',
-        url: '/questions/:idx',
-        component: 'questions',
-        resolve: {
-            transitionAlias: '$transition$', // see https://github.com/angular-ui/ui-router/issues/3110
-
-            questions: ["QuestionsService", function questions(QuestionsService) {
-
-                console.log('resolve questions');
-
-                return QuestionsService.retrieveQuestions().then(function onSuccess(res) {
-
-                    console.log(res);
-
-                    QuestionsService.setQuestions(res);
-
-                    return QuestionsService.questions.data;
-                }).catch(function onError(err) {
-                    console.log('error while retrieving questions : ', err);
-                });
-            }]
-        }
-    });
-}]);})(window.angular);
+angular.module('hexaquiz.common.questions', ['ui.router']);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -95,7 +70,26 @@ var questions = {
     controller: 'QuestionsController'
 };
 
-angular.module('hexaquiz.common.questions').component('questions', questions);})(window.angular);
+angular.module('hexaquiz.common.questions').component('questions', questions).config(["$stateProvider", function ($stateProvider) {
+    $stateProvider.state('questions', {
+        parent: 'app',
+        url: '/questions/:idx',
+        component: 'questions',
+        resolve: {
+            transitionAlias: '$transition$', // see https://github.com/angular-ui/ui-router/issues/3110
+            questions: ["QuestionsService", function questions(QuestionsService) {
+                console.log('resolve questions');
+                return QuestionsService.retrieveQuestions().then(function onSuccess(res) {
+                    console.log(res);
+                    QuestionsService.setQuestions(res);
+                    return QuestionsService.questions.data;
+                }).catch(function onError(err) {
+                    console.log('error while retrieving questions : ', err);
+                });
+            }]
+        }
+    });
+}]);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
