@@ -100,8 +100,8 @@ angular.module('hexaquiz.common.questions').component('questions', questions);})
 'use strict';
 'use strict';
 
-QuestionsController.$inject = ["$transitions", "$state", "QuestionsService"];
-function QuestionsController($transitions, $state, QuestionsService) {
+QuestionsController.$inject = ["$state", "QuestionsService"];
+function QuestionsController($state, QuestionsService) {
 
     var ctrl = this,
         currentIndex = -1,
@@ -110,7 +110,6 @@ function QuestionsController($transitions, $state, QuestionsService) {
     ctrl.$onInit = function () {
 
         console.log('QuestionsController');
-        console.log($transitions);
         console.log('this.questions : ', ctrl.questions);
 
         questionsLength = ctrl.questions.length;
@@ -119,6 +118,25 @@ function QuestionsController($transitions, $state, QuestionsService) {
 
         /// nav ///
         ctrl.isPrevDisabled = parseInt(currentIndex) === 0;
+
+        ctrl.navTo = function (e) {
+            switch (e.dir) {
+                case 'prev':
+                    $state.go('questions', {
+                        idx: currentIndex === 0 ? currentIndex : parseInt(currentIndex - 1)
+                    });
+                    break;
+                case 'next':
+                    if (parseInt(currentIndex) === questionsLength - 1) {
+                        // $state.go('score');
+                    } else {
+                        $state.go('questions', {
+                            idx: parseInt(currentIndex) + 1
+                        });
+                    }
+                    break;
+            }
+        };
         ///////////
 
         /// questions list ///
@@ -129,13 +147,9 @@ function QuestionsController($transitions, $state, QuestionsService) {
             }
         };
 
-        // ctrl.changeSelected = function (e) {
-        //     console.log('change selected');
-        //     console.log(e.idx);
-        //     console.log(currentIndex);
-        //     QuestionsService.currentAnswers[currentIndex] = e.idx;
-        // };
-        //////////////////////
+        ctrl.changeSelected = function (e) {
+            QuestionsService.currentAnswers[currentIndex] = e.idx;
+        };
 
         /// questions ribbon ///
         ctrl.ribbonIndexes = {
@@ -143,29 +157,6 @@ function QuestionsController($transitions, $state, QuestionsService) {
             total: questionsLength
         };
         ////////////////////////
-    };
-
-    ctrl.navTo = function (e) {
-        switch (e.dir) {
-            case 'prev':
-                $state.go('questions', {
-                    idx: currentIndex === 0 ? currentIndex : parseInt(currentIndex - 1)
-                });
-                break;
-            case 'next':
-                if (parseInt(currentIndex) === questionsLength - 1) {
-                    // $state.go('score');
-                } else {
-                    $state.go('questions', {
-                        idx: parseInt(currentIndex) + 1
-                    });
-                }
-                break;
-        }
-    };
-
-    ctrl.changeSelected = function (e) {
-        QuestionsService.currentAnswers[currentIndex] = e.idx;
     };
 }
 
@@ -242,6 +233,48 @@ function QuestionsService($http) {
 'use strict';
 'use strict';
 
+var questionsList = {
+    bindings: {
+        question: '<',
+        onRadioChanged: '&'
+    },
+    templateUrl: './questions-list.html',
+    controller: 'QuestionsListController'
+};
+
+angular.module('hexaquiz.common.questions').component('questionsList', questionsList);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+function QuestionsListController() {
+
+    var ctrl = this;
+
+    ctrl.$onInit = function () {
+
+        console.log('QuestionsListController');
+
+        ctrl.entries = ctrl.question.current;
+
+        ctrl.checkedQuestion = ctrl.question.checkedQuestion();
+
+        ctrl.radioHasChanged = function (idx) {
+            console.log('radio has changed : ', idx);
+            ctrl.onRadioChanged({
+                $event: {
+                    idx: idx
+                }
+            });
+        };
+    };
+}
+
+angular.module('hexaquiz.common.questions').controller('QuestionsListController', QuestionsListController);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
 var questionsNav = {
     bindings: {
         questions: '<',
@@ -285,52 +318,6 @@ function QuestionsNavController() {
 }
 
 angular.module('hexaquiz.common.questions').controller('QuestionsNavController', QuestionsNavController);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-var questionsList = {
-    bindings: {
-        question: '<',
-        onRadioChanged: '&'
-    },
-    templateUrl: './questions-list.html',
-    controller: 'QuestionsListController'
-};
-
-angular.module('hexaquiz.common.questions').component('questionsList', questionsList);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-QuestionsListController.$inject = ["QuestionsService"];
-function QuestionsListController(QuestionsService) {
-
-    var ctrl = this;
-
-    ctrl.$onInit = function () {
-
-        // var currentIndex = ctrl.transitionAlias.params().idx;
-        // questionsLength = QuestionsService.getQuestions().length;
-
-        console.log('QuestionsListController');
-
-        ctrl.entries = ctrl.question.current;
-
-        ctrl.checkedQuestion = ctrl.question.checkedQuestion();
-
-        ctrl.radioHasChanged = function (idx) {
-            console.log('radio has changed : ', idx);
-            ctrl.onRadioChanged({
-                $event: {
-                    idx: idx
-                }
-            });
-        };
-    };
-}
-
-angular.module('hexaquiz.common.questions').controller('QuestionsListController', QuestionsListController);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';

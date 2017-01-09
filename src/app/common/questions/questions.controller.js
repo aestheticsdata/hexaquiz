@@ -1,4 +1,4 @@
-function QuestionsController($transitions, $state, QuestionsService) {
+function QuestionsController($state, QuestionsService) {
 
     var ctrl = this,
         currentIndex = -1,
@@ -7,7 +7,6 @@ function QuestionsController($transitions, $state, QuestionsService) {
     ctrl.$onInit = function () {
 
         console.log('QuestionsController');
-        console.log($transitions);
         console.log('this.questions : ', ctrl.questions);
 
 
@@ -17,6 +16,25 @@ function QuestionsController($transitions, $state, QuestionsService) {
 
         /// nav ///
         ctrl.isPrevDisabled = (parseInt(currentIndex) === 0);
+
+        ctrl.navTo = function (e) {
+            switch(e.dir){
+                case 'prev':
+                    $state.go('questions', {
+                        idx:currentIndex === 0 ? currentIndex : parseInt(currentIndex-1)
+                    });
+                    break;
+                case 'next':
+                    if (parseInt(currentIndex) === questionsLength-1) {
+                        // $state.go('score');
+                    } else {
+                        $state.go('questions', {
+                            idx:parseInt(currentIndex)+1
+                        });
+                    }
+                    break;
+            }
+        };
         ///////////
 
         /// questions list ///
@@ -27,13 +45,10 @@ function QuestionsController($transitions, $state, QuestionsService) {
             }
         };
 
-        // ctrl.changeSelected = function (e) {
-        //     console.log('change selected');
-        //     console.log(e.idx);
-        //     console.log(currentIndex);
-        //     QuestionsService.currentAnswers[currentIndex] = e.idx;
-        // };
-        //////////////////////
+        ctrl.changeSelected = function (e) {
+            QuestionsService.currentAnswers[currentIndex] = e.idx;
+        };
+
 
         /// questions ribbon ///
         ctrl.ribbonIndexes = {
@@ -42,29 +57,6 @@ function QuestionsController($transitions, $state, QuestionsService) {
         };
         ////////////////////////
     };
-
-    ctrl.navTo = function (e) {
-        switch(e.dir){
-            case 'prev':
-                $state.go('questions', {
-                    idx:currentIndex === 0 ? currentIndex : parseInt(currentIndex-1)
-                });
-                break;
-            case 'next':
-                if (parseInt(currentIndex) === questionsLength-1) {
-                    // $state.go('score');
-                } else {
-                    $state.go('questions', {
-                        idx:parseInt(currentIndex)+1
-                    });
-                }
-                break;
-        }
-    };
-
-    ctrl.changeSelected = function (e) {
-        QuestionsService.currentAnswers[currentIndex] = e.idx;
-    }
 
 }
 

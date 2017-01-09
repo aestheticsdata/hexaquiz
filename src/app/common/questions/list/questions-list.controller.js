@@ -1,11 +1,8 @@
-function QuestionsListController(QuestionsService) {
+function QuestionsListController() {
 
     var ctrl = this;
 
     ctrl.$onInit = function () {
-
-        // var currentIndex = ctrl.transitionAlias.params().idx;
-        // questionsLength = QuestionsService.getQuestions().length;
 
         console.log('QuestionsListController');
 
