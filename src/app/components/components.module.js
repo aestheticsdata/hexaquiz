@@ -1,2 +1,4 @@
 angular
-    .module('hexaquiz.components',[]);
+    .module('hexaquiz.components',[
+        'hexaquiz.components.nav'
+    ]);

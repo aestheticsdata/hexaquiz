@@ -1,13 +1,13 @@
-var questionsNav = {
+var nav = {
     bindings: {
         questions:'<',
         isPrevDisabled:'<',
         onNavClick:'&'
     },
-    templateUrl: './questions-nav.html',
+    templateUrl: './nav.html',
     controller: 'QuestionsNavController'
 };
 
 angular
-    .module('hexaquiz.common.questions')
-    .component('questionsNav', questionsNav);
+    .module('hexaquiz.components.nav')
+    .component('nav', nav);

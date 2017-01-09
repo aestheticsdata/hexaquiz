@@ -26,5 +26,5 @@ function QuestionsNavController() {
 }
 
 angular
-    .module('hexaquiz.common.questions')
+    .module('hexaquiz.components.nav')
     .controller('QuestionsNavController', QuestionsNavController);
