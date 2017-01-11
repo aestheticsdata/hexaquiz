@@ -8,4 +8,13 @@ angular
 
 function CONFIG() {
 
+    var config = {
+        apiKey: "",
+        authDomain: "",
+        databaseURL: "",
+        storageBucket: "",
+        messagingSenderId: ""
+    };
+
+    return config;
 }

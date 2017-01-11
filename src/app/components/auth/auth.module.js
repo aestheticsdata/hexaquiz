@@ -3,6 +3,12 @@ angular
         'ui.router',
         'firebase'
     ])
-    .config(function ($firebaseRefProvider) {
+    .config(function (CONFIG, $firebaseRefProvider) {
+        var config = CONFIG();
+        $firebaseRefProvider
+            .registerUrl({
+                default: CONFIG.databaseURL
+            });
 
-    })
+        firebase.initializeApp(CONFIG);
+    });

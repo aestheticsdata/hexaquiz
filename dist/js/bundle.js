@@ -24,6 +24,13 @@ angular.module('hexaquiz.common.questions', ['ui.router']);})(window.angular);
 'use strict';
 'use strict';
 
+angular.module('hexaquiz.components.auth', ['ui.router', 'firebase']).config(["CONFIG", "$firebaseRefProvider", function (CONFIG, $firebaseRefProvider) {
+    $firebaseRefProvider.registerUrl({});
+}]);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
 angular.module('hexaquiz.components.nav', []);})(window.angular);
 (function(angular){
 'use strict';
@@ -232,6 +239,48 @@ function QuestionsService($http) {
 'use strict';
 'use strict';
 
+// real auth data
+
+angular.module('hexaquiz.components.auth').factory('CONFIG', CONFIG);
+
+function CONFIG() {
+
+    var config = {
+        apiKey: "AIzaSyClQMBtHySSTr9Iw7zCHZhAFhNzXuXo434",
+        authDomain: "hexaquiz-6133e.firebaseapp.com",
+        databaseURL: "https://hexaquiz-6133e.firebaseio.com",
+        storageBucket: "hexaquiz-6133e.appspot.com",
+        messagingSenderId: "556453159537"
+    };
+
+    return config;
+}})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+////////////////////////////////////////////////////////////
+// this file is the config service without real auth data //
+////////////////////////////////////////////////////////////
+
+angular.module('hexaquiz.components.auth').factory('CONFIG', CONFIG);
+
+function CONFIG() {
+
+    var config = {
+        apiKey: "",
+        authDomain: "",
+        databaseURL: "",
+        storageBucket: "",
+        messagingSenderId: ""
+    };
+
+    return config;
+}})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
 var nav = {
     bindings: {
         questions: '<',
@@ -279,35 +328,6 @@ angular.module('hexaquiz.components.nav').controller('QuestionsNavController', Q
 'use strict';
 'use strict';
 
-var questionsRibbon = {
-    bindings: {
-        indexes: '<'
-    },
-    templateUrl: './questions-ribbon.html',
-    controller: 'QuestionsRibbonController'
-};
-
-angular.module('hexaquiz.common.questions').component('questionsRibbon', questionsRibbon);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-function QuestionsRibbonController() {
-
-    var ctrl = this;
-
-    this.$onInit = function () {
-
-        ctrl.currentQuestionIdx = ctrl.indexes.current;
-        ctrl.totalQuestionIdx = ctrl.indexes.total;
-    };
-}
-
-angular.module('hexaquiz.common.questions').controller('QuestionsRibbonController', QuestionsRibbonController);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
 var questionsList = {
     bindings: {
         question: '<',
@@ -350,11 +370,40 @@ angular.module('hexaquiz.common.questions').controller('QuestionsListController'
 'use strict';
 'use strict';
 
+var questionsRibbon = {
+    bindings: {
+        indexes: '<'
+    },
+    templateUrl: './questions-ribbon.html',
+    controller: 'QuestionsRibbonController'
+};
+
+angular.module('hexaquiz.common.questions').component('questionsRibbon', questionsRibbon);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+function QuestionsRibbonController() {
+
+    var ctrl = this;
+
+    this.$onInit = function () {
+
+        ctrl.currentQuestionIdx = ctrl.indexes.current;
+        ctrl.totalQuestionIdx = ctrl.indexes.total;
+    };
+}
+
+angular.module('hexaquiz.common.questions').controller('QuestionsRibbonController', QuestionsRibbonController);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
 angular.module('hexaquiz.templates', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('./root.html', '<div class="root"><div ui-view></div></div>');
   $templateCache.put('./app.html', '<div class="root"><div class="app">my quiz app<div ui-view=""></div></div></div>');
-  $templateCache.put('./nav.html', '<div class="questions"><div class="container-fluid"><div class="row buttons-prev-next-hxf"><div class="col-xs-offset-3 col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.prev()" ng-disabled="$ctrl.isPrevDisabled">PREVIOUS</button></div><div class="col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.next()">NEXT</button></div></div></div></div>');
   $templateCache.put('./questions.html', '<div class="questions"><nav questions="$ctrl.questions" is-prev-disabled="$ctrl.isPrevDisabled" on-nav-click="$ctrl.navTo($event)"></nav><questions-list question="$ctrl.questionsListQuestion" on-radio-changed="$ctrl.changeSelected($event)"></questions-list><questions-ribbon indexes="$ctrl.ribbonIndexes"></questions-ribbon></div>');
+  $templateCache.put('./nav.html', '<div class="questions"><div class="container-fluid"><div class="row buttons-prev-next-hxf"><div class="col-xs-offset-3 col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.prev()" ng-disabled="$ctrl.isPrevDisabled">PREVIOUS</button></div><div class="col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.next()">NEXT</button></div></div></div></div>');
   $templateCache.put('./questions-list.html', '<div class="row"><div class="col-md-offset-3 col-md-6"><div class="question panel panel-success"><div class="panel-heading text-center">{{$ctrl.entries.question}}</div><div class="panel-body"><div class="list-group list-group-hxf"><ul ng-repeat="entry in $ctrl.entries.choices" class="list-group-item choices"><input id="{{entry}}" type="radio" name="answerRadio" ng-checked="$index == $ctrl.checkedQuestion" ng-click="$ctrl.radioHasChanged($index)"><label for="{{entry}}"><span class="entry">{{entry}}</span></label></ul></div></div></div></div></div>');
   $templateCache.put('./questions-ribbon.html', '<div class="row"><div class="col-xs-12"><div class="text-center counter-hxf">{{$ctrl.currentQuestionIdx}}/{{$ctrl.totalQuestionIdx}}</div></div></div>w');
 }]);})(window.angular);
