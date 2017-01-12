@@ -4,5 +4,5 @@ angular
         'hexaquiz.common.questions'
     ])
     .run(function ($state) {
-        $state.go('app');
+        // $state.go('app');
     });
