@@ -1,6 +1,7 @@
 var login = {
     templateUrl: './login.html',
-    controller: 'LoginController'
+    controller: 'LoginController',
+    textservice:'<'
 };
 
 angular
@@ -15,7 +16,7 @@ angular
             })
             .state('auth.login', {
                 url: '/login',
-                component: 'login'
+                component: 'login',
             });
         $urlRouterProvider.otherwise('/auth/login');
     });

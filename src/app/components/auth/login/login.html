@@ -4,8 +4,8 @@
         <auth-form
                 user="$ctrl.user"
                 error-message="{{ $ctrl.errorMessage }}"
-                sign-button="Sign in"
-                reset-button="Reset"
+                sign-button="{{ $ctrl.text.signin }}"
+                reset-button="{{ $ctrl.text.reset }}"
                 on-submit="$ctrl.loginUser($event)">
         </auth-form>
 
