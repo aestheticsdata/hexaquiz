@@ -5,4 +5,11 @@ body {
 
      // workaround for bootstrap .container-fluid causing horizontal scrollbar appearing
      overflow-x: hidden;
+
+     .root {
+          .container-fluid {
+               padding-left: 0;
+               padding-right: 0;
+          }
+     }
 }
