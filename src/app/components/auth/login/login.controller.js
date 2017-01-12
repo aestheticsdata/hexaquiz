@@ -1,4 +1,4 @@
-function LoginController(TextService) {
+function LoginController(TextService, AuthService, $state) {
 
     var ctrl = this;
 
@@ -11,14 +11,13 @@ function LoginController(TextService) {
         };
 
         ctrl.loginUser = function (e) {
-            // return AuthService
-            //     .login(e.user)
-            //     .then(function () {
-            //         $state.go('app');
-            //     }, function (reason) {
-            //         ctrl.errorMessage = reason.message;
-            //     });
-            console.log(e);
+            return AuthService
+                .login(e.user)
+                .then(function () {
+                    $state.go('app');
+                }, function (reason) {
+                    ctrl.errorMessage = reason.message;
+                });
         };
     }
 }

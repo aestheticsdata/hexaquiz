@@ -1,4 +1,4 @@
-function AuthService($firebaseAuth) {
+function AuthService($firebaseAuth, $state) {
 
     var auth = $firebaseAuth(),
         authData = null;

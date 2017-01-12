@@ -3,9 +3,31 @@ angular
         'ui.router',
         'firebase'
     ])
-    .config(function () {
-
+    .config(function (CONFIGProvider) {
+        var config = CONFIGProvider.$get();
+        firebase.initializeApp(config);
     })
-    .run(function () {
-
+    .run(function ($transitions, $state, AuthService) {
+        $transitions.onStart({
+            to: function (state) {
+                console.log('$transitions state : ', state);
+                return !!(state.data && state.data.requiredAuth);
+            }
+        }, function() {
+            console.log('777');
+            return AuthService
+                .requireAuthentication()
+                .catch(function () {
+                    console.log('auth catched');
+                    return $state.target('auth.login');
+                });
+        });
+        $transitions.onStart({
+            to: 'auth.*'
+        }, function () {
+            console.log('888');
+            if (AuthService.isAuthenticated()) {
+                return $state.target('app');
+            }
+        });
     });
