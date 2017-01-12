@@ -1,6 +1,10 @@
 var authForm = {
     bindings: {
-
+        user: '<',
+        errorMessage: '@',
+        signButton:'@',
+        resetButton: '@',
+        onSubmit: '&'
     },
     templateUrl:'./auth-form.html',
     controller:'AuthFormController'
