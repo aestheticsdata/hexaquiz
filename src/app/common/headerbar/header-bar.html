@@ -4,7 +4,9 @@
             <header>
                 <div class="col-md-4 header-padding">
                     <span class="app-title">hexaquiz</span>
-                    <button type="button" class="btn btn-default btn-sm ng-binding">log out</button>
+                    <button type="button"
+                            class="btn btn-default btn-sm ng-binding"
+                            ng-show="$ctrl.loggedIn">log out</button>
                 </div>
             </header>
         </div>

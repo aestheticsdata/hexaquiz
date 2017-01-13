@@ -3,6 +3,11 @@ function HeaderBarController() {
 
     ctrl.$onInit = function () {
         console.log('HeaderBarController');
+        console.log('ctrl.loggedIn', ctrl.loggedIn);
+    };
+
+    ctrl.$onChanges = function (changes) {
+        ctrl.loggedIn = changes.loggedIn.currentValue;
     }
 }
 
