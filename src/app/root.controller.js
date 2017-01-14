@@ -1,11 +1,12 @@
-function RootController($log) {
+function RootController($log, $interval) {
     var ctrl = this;
-    ctrl.loggedIn = false;
-
 
     ctrl.$onInit = function () {
         $log.debug('RootController');
+
+        ctrl.loggedIn = false;
         ctrl.displayLogOutButton = function (e) {
+            $log.warn('displayLogOutButton');
             ctrl.loggedIn = true;
         };
     };

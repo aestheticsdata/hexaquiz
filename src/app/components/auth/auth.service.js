@@ -1,4 +1,4 @@
-function AuthService($firebaseAuth, $state) {
+function AuthService($firebaseAuth) {
 
     var auth = $firebaseAuth(),
         authData = null;
@@ -42,6 +42,10 @@ function AuthService($firebaseAuth, $state) {
 
     this.isAuthenticated = function () {
         return !!authData;
+    };
+
+    this.getAuth = function () {
+        return auth.$getAuth();
     };
 
     this.getUser = function () {

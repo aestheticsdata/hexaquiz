@@ -1,5 +1,10 @@
 [
         {
+          "question": "Where is the CERN ?",
+          "choices": ["France", "Swiss", "France and Swiss"],
+          "correctAnswer": 2
+        },
+        {
             "question": "What is Backbone.js ?",
             "choices": ["a car", "a js library", "a bone", "an egg", "nothing"],
             "correctAnswer": 1

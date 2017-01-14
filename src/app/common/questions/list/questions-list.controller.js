@@ -1,10 +1,13 @@
-function QuestionsListController() {
+function QuestionsListController(AuthService, $log) {
 
     var ctrl = this;
 
     ctrl.$onInit = function () {
 
-        console.log('QuestionsListController');
+        $log.info('QuestionsListController');
+        $log.info('get auth : ');
+        $log.info(AuthService);
+        $log.info(AuthService.getAuth());
 
         ctrl.entries = ctrl.question.current;
 

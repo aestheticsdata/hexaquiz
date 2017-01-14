@@ -15,6 +15,7 @@ function LoginController(TextService, AuthService, $state) {
             return AuthService
                 .login(e.user)
                 .then(function () {
+                    console.log('login from login controller');
                     // this is a workaround, because in the current version of
                     // ui-router 1.0.0-beta.3 it's not possible to route a
                     // component using '&' binding to from parent to child

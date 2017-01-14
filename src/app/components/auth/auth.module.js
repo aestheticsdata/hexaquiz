@@ -11,6 +11,7 @@ angular
         $transitions.onStart({
             to: function (state) {
                 console.log('$transitions state : ', state);
+                console.log('state.data : ', state.data);
                 return !!(state.data && state.data.requiredAuth);
             }
         }, function() {
