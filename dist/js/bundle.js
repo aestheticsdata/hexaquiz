@@ -7,14 +7,14 @@ angular.module('hexaquiz', ['hexaquiz', 'hexaquiz.common', 'hexaquiz.components'
 'use strict';
 'use strict';
 
-angular.module('hexaquiz.components', ['hexaquiz.components.auth', 'hexaquiz.components.nav']);})(window.angular);
+angular.module('hexaquiz.common', ['ui.router', 'hexaquiz.common.questions']).run(["$state", function ($state) {
+    // $state.go('app');
+}]);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
 
-angular.module('hexaquiz.common', ['ui.router', 'hexaquiz.common.questions']).run(["$state", function ($state) {
-    // $state.go('app');
-}]);})(window.angular);
+angular.module('hexaquiz.components', ['hexaquiz.components.auth', 'hexaquiz.components.nav']);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -77,8 +77,8 @@ function RootController($log, $interval) {
         $log.debug('RootController');
 
         ctrl.loggedIn = false;
-        ctrl.displayLogOutButton = function (e) {
-            $log.warn('displayLogOutButton');
+        ctrl.displayLogOutButton = function (v) {
+            $log.warn('%c displayLogOutButton', 'background: green; color: white; display: block;');
             ctrl.loggedIn = true;
         };
     };
@@ -142,6 +142,51 @@ function AppController() {
 }
 
 angular.module('hexaquiz.common').controller('AppController', AppController);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+var headerbar = {
+    templateUrl: './header-bar.html',
+    controller: 'HeaderBarController',
+    bindings: {
+        loggedIn: '<'
+    }
+};
+
+angular.module('hexaquiz.common').component('headerBar', headerbar);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+HeaderBarController.$inject = ["AuthService", "$state", "$log"];
+function HeaderBarController(AuthService, $state, $log) {
+    var ctrl = this;
+
+    ctrl.$onInit = function () {
+        console.log('HeaderBarController');
+        console.log('ctrl.loggedIn', ctrl.loggedIn);
+    };
+
+    ctrl.$onChanges = function (changes) {
+        console.clear();
+        $log.info('headerbar on change');
+        $log.info(changes.loggedIn);
+        // ctrl.headerBarLoggedIn = (angular.copy(changes.loggedIn)).currentValue;
+    };
+
+    ctrl.logout = function () {
+        console.log('log out from header bar');
+        AuthService.logout().then(function () {
+            // ctrl.headerBarLoggedIn = false;
+            ctrl.loggedIn = false;
+
+            $state.go('auth.login');
+        });
+    };
+}
+
+angular.module('hexaquiz.common').controller('HeaderBarController', HeaderBarController);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -288,49 +333,6 @@ function QuestionsNavController() {
 }
 
 angular.module('hexaquiz.components.nav').controller('QuestionsNavController', QuestionsNavController);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-var headerbar = {
-    templateUrl: './header-bar.html',
-    controller: 'HeaderBarController',
-    bindings: {
-        loggedIn: '<'
-    }
-};
-
-angular.module('hexaquiz.common').component('headerBar', headerbar);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-HeaderBarController.$inject = ["AuthService", "$state", "$log"];
-function HeaderBarController(AuthService, $state, $log) {
-    var ctrl = this;
-
-    ctrl.$onInit = function () {
-        console.log('HeaderBarController');
-        console.log('ctrl.loggedIn', ctrl.loggedIn);
-    };
-
-    ctrl.$onChanges = function (changes) {
-        $log.info('headerbar on change');
-        $log.info(changes.loggedIn);
-        ctrl.loggedIn = angular.copy(changes.loggedIn.currentValue);
-    };
-
-    ctrl.logout = function () {
-        console.log('log out from header bar');
-        AuthService.logout().then(function () {
-            ctrl.loggedIn = false;
-
-            $state.go('auth.login');
-        });
-    };
-}
-
-angular.module('hexaquiz.common').controller('HeaderBarController', HeaderBarController);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -612,7 +614,8 @@ function LoginController(TextService, AuthService, $state) {
                 // tell the header-bar to display the logout button
                 // when the login component has successfully authenticated
                 // see https://github.com/angular-ui/ui-router/issues/3239
-                ctrl.parentCtrl.displayLogOutButton(e);
+                // ctrl.parentCtrl.displayLogOutButton(e);
+                ctrl.parentCtrl.displayLogOutButton(true);
                 //////////////////////////////////////////////////////////
                 $state.go('app');
             }, function (reason) {
@@ -705,8 +708,8 @@ angular.module('hexaquiz.common.questions').controller('QuestionsRibbonControlle
 angular.module('hexaquiz.templates', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('./root.html', '<div class="root"><header-bar logged-in="$ctrl.loggedIn"></header-bar><div ui-view></div></div>');
   $templateCache.put('./app.html', '<div class="root"><div class="app"><div ui-view=""></div></div></div>');
-  $templateCache.put('./questions.html', '<div class="questions"><nav questions="$ctrl.questions" is-prev-disabled="$ctrl.isPrevDisabled" on-nav-click="$ctrl.navTo($event)"></nav><questions-list question="$ctrl.questionsListQuestion" on-radio-changed="$ctrl.changeSelected($event)"></questions-list><questions-ribbon indexes="$ctrl.ribbonIndexes"></questions-ribbon></div>');
   $templateCache.put('./header-bar.html', '<div class="container-fluid"><div class="row"><div class="col-md-12 header"><header><div class="col-md-4 header-padding"><span class="app-title">hexaquiz</span> <button type="button" class="btn btn-default btn-sm ng-binding" ng-show="$ctrl.loggedIn" ng-click="$ctrl.logout()">log out</button></div></header></div></div></div>');
+  $templateCache.put('./questions.html', '<div class="questions"><nav questions="$ctrl.questions" is-prev-disabled="$ctrl.isPrevDisabled" on-nav-click="$ctrl.navTo($event)"></nav><questions-list question="$ctrl.questionsListQuestion" on-radio-changed="$ctrl.changeSelected($event)"></questions-list><questions-ribbon indexes="$ctrl.ribbonIndexes"></questions-ribbon></div>');
   $templateCache.put('./nav.html', '<div class="questions"><div class="container-fluid"><div class="row buttons-prev-next-hxf"><div class="col-xs-offset-3 col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.prev()" ng-disabled="$ctrl.isPrevDisabled">PREVIOUS</button></div><div class="col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.next()">NEXT</button></div></div></div></div>');
   $templateCache.put('./questions-list.html', '<div class="row"><div class="col-md-offset-3 col-md-6"><div class="question panel panel-success"><div class="panel-heading text-center">{{$ctrl.entries.question}}</div><div class="panel-body"><div class="list-group list-group-hxf"><ul ng-repeat="entry in $ctrl.entries.choices" class="list-group-item choices"><input id="{{entry}}" type="radio" name="answerRadio" ng-checked="$index == $ctrl.checkedQuestion" ng-click="$ctrl.radioHasChanged($index)"><label for="{{entry}}"><span class="entry">{{entry}}</span></label></ul></div></div></div></div></div>');
   $templateCache.put('./questions-ribbon.html', '<div class="row"><div class="col-xs-12"><div class="text-center counter-hxf">{{$ctrl.currentQuestionIdx}}/{{$ctrl.totalQuestionIdx}}</div></div></div>');

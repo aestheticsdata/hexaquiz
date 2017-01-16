@@ -5,8 +5,8 @@ function RootController($log, $interval) {
         $log.debug('RootController');
 
         ctrl.loggedIn = false;
-        ctrl.displayLogOutButton = function (e) {
-            $log.warn('displayLogOutButton');
+        ctrl.displayLogOutButton = function (v) {
+            $log.warn('%c displayLogOutButton', 'background: green; color: white; display: block;');
             ctrl.loggedIn = true;
         };
     };

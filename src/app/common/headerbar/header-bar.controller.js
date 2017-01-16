@@ -7,14 +7,16 @@ function HeaderBarController(AuthService, $state, $log) {
     };
 
     ctrl.$onChanges = function (changes) {
+        console.clear();
         $log.info('headerbar on change');
         $log.info(changes.loggedIn);
-        ctrl.loggedIn = angular.copy(changes.loggedIn.currentValue);
+        // ctrl.headerBarLoggedIn = (angular.copy(changes.loggedIn)).currentValue;
     };
 
     ctrl.logout = function () {
         console.log('log out from header bar');
         AuthService.logout().then(function () {
+            // ctrl.headerBarLoggedIn = false;
             ctrl.loggedIn = false;
 
             $state.go('auth.login');

@@ -23,7 +23,8 @@ function LoginController(TextService, AuthService, $state) {
                     // tell the header-bar to display the logout button
                     // when the login component has successfully authenticated
                     // see https://github.com/angular-ui/ui-router/issues/3239
-                    ctrl.parentCtrl.displayLogOutButton(e);
+                    // ctrl.parentCtrl.displayLogOutButton(e);
+                    ctrl.parentCtrl.displayLogOutButton(true);
                     //////////////////////////////////////////////////////////
                     $state.go('app');
                 }, function (reason) {
