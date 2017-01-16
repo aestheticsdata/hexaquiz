@@ -1,4 +1,4 @@
-function RootController($log, $interval) {
+function RootController($log) {
     var ctrl = this;
 
     ctrl.$onInit = function () {

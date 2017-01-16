@@ -19,7 +19,7 @@ var login = {
 angular
     .module('hexaquiz.components.auth')
     .component('login', login)
-    .config(function ($stateProvider, $urlRouterProvider) {
+    .config(function ($stateProvider, $urlServiceProvider) {
         $stateProvider
             .state('auth', {
                 redirectTo: 'auth.login',
@@ -30,5 +30,5 @@ angular
                 url: '/login',
                 component: 'login'
             });
-        $urlRouterProvider.otherwise('/auth/login');
+        $urlServiceProvider.rules.otherwise('/auth/login'); // entry point of the app
     });
