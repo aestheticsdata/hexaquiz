@@ -1,4 +1,4 @@
-function LoginController(TextService, AuthService, $state, $log) {
+function LoginController(TextService, AuthService, $state, AppStateService, $log) {
 
     var ctrl = this;
 
@@ -21,6 +21,7 @@ function LoginController(TextService, AuthService, $state, $log) {
                             loggedIn: true
                         }
                     });
+                    AppStateService.comingFromLogin = true;
                     $state.go('app');
                 }, function (reason) {
                     ctrl.errorMessage = reason.message;

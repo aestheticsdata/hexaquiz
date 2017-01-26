@@ -3,7 +3,7 @@ function HeaderBarController(AuthService, $state, $log) {
 
     ctrl.$onInit = function () {
         console.log('HeaderBarController');
-        console.log('ctrl.loggedIn', ctrl.loggedIn);
+        console.log('%c ctrl.loggedIn', 'background:teal; color:aqua; display:block',ctrl.loggedIn);
     };
 
     ctrl.$onChanges = function (changes) {

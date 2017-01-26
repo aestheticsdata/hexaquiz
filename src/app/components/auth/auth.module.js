@@ -7,11 +7,12 @@ angular
         var config = CONFIGProvider.$get();
         firebase.initializeApp(config);
     })
-    .run(function ($transitions, $state, AuthService) {
+    .run(function ($transitions, $state, AuthService, AppStateService, $log) {
         $transitions.onStart({
             to: function (state) {
-                console.log('$transitions state : ', state);
-                console.log('state.data : ', state.data);
+                $log.info('%c $transitions state : ', 'background: green; color: white; display: block;',state);
+                $log.info('%c state.data : ', 'background: green; color: white; display: block;',state.data);
+                $log.info('%c AppStateService.comingFromLogin : ', 'background: green; color: white; display: block;', AppStateService.comingFromLogin);
                 return !!(state.data && state.data.requiredAuth);
             }
         }, function() {
@@ -33,4 +34,32 @@ angular
                 return $state.target('app');
             }
         });
+
+        // prevent direct access to questions even when authenticated
+
+        // cause a transition rejection but no flickering
+        $transitions.onStart({
+            to: 'questions'
+        }, function () {
+            if (!AppStateService.comingFromLogin) {
+                AuthService.logout().then(function () {
+                    $state.go('login');
+                })
+            }
+        });
+
+
+        // no transition rejection but flickering
+        // $transitions.onEnter({
+        //     entering: 'questions'
+        // }, function () {
+        //     if (!AppStateService.comingFromLogin) {
+        //         AuthService.logout().then(function () {
+        //             $state.go('login');
+        //         })
+        //     }
+        // });
+
+
+        /////////////////////////////////////////////////////////////
     });
