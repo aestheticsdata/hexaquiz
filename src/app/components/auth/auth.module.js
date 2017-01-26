@@ -12,7 +12,6 @@ angular
             to: function (state) {
                 $log.info('%c $transitions state : ', 'background: green; color: white; display: block;',state);
                 $log.info('%c state.data : ', 'background: green; color: white; display: block;',state.data);
-                $log.info('%c AppStateService.comingFromLogin : ', 'background: green; color: white; display: block;', AppStateService.comingFromLogin);
                 return !!(state.data && state.data.requiredAuth);
             }
         }, function() {

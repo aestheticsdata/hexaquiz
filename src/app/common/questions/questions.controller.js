@@ -27,6 +27,11 @@ function QuestionsController($state, QuestionsService) {
                 case 'next':
                     if (parseInt(currentIndex) === questionsLength-1) {
                         // $state.go('score');
+                        console.log('..........');
+                        console.log(QuestionsService.currentAnswers);
+                        console.log(typeof QuestionsService.currentAnswers[0]);
+                        console.log('..........');
+
                     } else {
                         $state.go('questions', {
                             idx:parseInt(currentIndex)+1

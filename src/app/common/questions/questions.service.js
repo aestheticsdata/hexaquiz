@@ -37,9 +37,17 @@ function QuestionsService($http) {
 
         qs.questions = questions;
 
+        // if not reloading the page when logged out and loggedin again,
+        // the currentAnswers array will grow each time
+        // without being reinitialized
+        qs.currentAnswers = [];
+        ///////////////////////////////////////////////////////////////
+
         for (var i=0; i<qs.questions.length; i++) {
             qs.currentAnswers.push(-1); // -1 is a flag to check if a radio button has been changed
         }
+
+        console.log(qs.currentAnswers);
 
         return true;
     }

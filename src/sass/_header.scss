@@ -4,7 +4,7 @@
   font-size: 30px;
   font-family: Lato;
   font-weight: 300;
-  text-align: center;
+  text-align: left;
   color: white;
 
   .app-title {
@@ -13,5 +13,11 @@
 
   .header-padding {
     padding-bottom: 9px;
+  }
+
+  .username {
+    font-size: 15px;
+    padding-top: 12px;
+    text-align: right;
   }
 }

@@ -24,8 +24,8 @@ angular
                             .then(
                                 function onSuccess(res) {
                                     console.log(res);
-                                    QuestionsService.setQuestions(res);
-                                    return QuestionsService.questions.data;
+                                    QuestionsService.setQuestions(res.data);
+                                    return QuestionsService.questions;
                                 }
                             )
                             .catch(
