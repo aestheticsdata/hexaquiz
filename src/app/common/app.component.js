@@ -1,9 +1,6 @@
 var app = {
     templateUrl: './app.html',
     controller: 'AppController',
-    require: {
-        parentCtrl:'^^rootcomponent'
-    }
 };
 
 angular

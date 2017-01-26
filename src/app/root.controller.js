@@ -5,9 +5,9 @@ function RootController($log) {
         $log.debug('RootController');
 
         ctrl.loggedIn = false;
-        ctrl.displayLogOutButton = function (v) {
-            $log.warn('%c displayLogOutButton', 'background: green; color: white; display: block;');
-            ctrl.loggedIn = true;
+
+        ctrl.displayLogOutButton = function (e) {
+            ctrl.loggedIn = e.loggedIn;
         };
     };
 }

@@ -2,13 +2,14 @@
 'use strict';
 'use strict';
 
-angular.module('hexaquiz', ['hexaquiz', 'hexaquiz.common', 'hexaquiz.components', 'hexaquiz.templates']);})(window.angular);
+angular.module('hexaquiz', ['hexaquiz.common', 'hexaquiz.components', 'hexaquiz.templates']);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
 
-angular.module('hexaquiz.common', ['ui.router', 'hexaquiz.common.questions']).run(["$state", function ($state) {
-    // $state.go('app');
+angular.module('hexaquiz.common', ['ui.router', 'hexaquiz.common.questions']).run(["$state", "$uiRouter", function ($state, $uiRouter) {
+    var vis = window['ui-router-visualizer'];
+    vis.visualizer($uiRouter);
 }]);})(window.angular);
 (function(angular){
 'use strict';
@@ -38,11 +39,13 @@ angular.module('hexaquiz.components.auth', ['ui.router', 'firebase']).config(["C
         console.log('777');
         return AuthService.requireAuthentication().catch(function () {
             console.log('auth catched');
-            return $state.target('auth.login');
+            // return $state.target('auth.login');
+            return $state.target('login');
         });
     });
     $transitions.onStart({
-        to: 'auth.*'
+        // to: 'auth.*'
+        to: 'login'
     }, function () {
         console.log('888');
         if (AuthService.isAuthenticated()) {
@@ -77,9 +80,9 @@ function RootController($log) {
         $log.debug('RootController');
 
         ctrl.loggedIn = false;
-        ctrl.displayLogOutButton = function (v) {
-            $log.warn('%c displayLogOutButton', 'background: green; color: white; display: block;');
-            ctrl.loggedIn = true;
+
+        ctrl.displayLogOutButton = function (e) {
+            ctrl.loggedIn = e.loggedIn;
         };
     };
 }
@@ -108,10 +111,7 @@ function TextService() {
 
 var app = {
     templateUrl: './app.html',
-    controller: 'AppController',
-    require: {
-        parentCtrl: '^^rootcomponent'
-    }
+    controller: 'AppController'
 };
 
 angular.module('hexaquiz.common').component('app', app).config(["$stateProvider", function ($stateProvider) {
@@ -137,7 +137,7 @@ function AppController() {
 
         // display log out button when user is logged in
         // and questions url are accessed directly
-        ctrl.parentCtrl.displayLogOutButton();
+        // ctrl.parentCtrl.displayLogOutButton();
     };
 }
 
@@ -150,7 +150,8 @@ var headerbar = {
     templateUrl: './header-bar.html',
     controller: 'HeaderBarController',
     bindings: {
-        loggedIn: '<'
+        loggedIn: '<',
+        onToggleLoggedOutBtn: '&'
     }
 };
 
@@ -169,7 +170,6 @@ function HeaderBarController(AuthService, $state, $log) {
     };
 
     ctrl.$onChanges = function (changes) {
-        console.clear();
         $log.info('headerbar on change');
         $log.info(changes.loggedIn);
         // ctrl.headerBarLoggedIn = (angular.copy(changes.loggedIn)).currentValue;
@@ -178,10 +178,13 @@ function HeaderBarController(AuthService, $state, $log) {
     ctrl.logout = function () {
         console.log('log out from header bar');
         AuthService.logout().then(function () {
-            // ctrl.headerBarLoggedIn = false;
-            ctrl.loggedIn = false;
-
-            $state.go('auth.login');
+            ctrl.onToggleLoggedOutBtn({
+                $event: {
+                    loggedIn: false
+                }
+            });
+            // $state.go('auth.login');
+            $state.go('login');
         });
     };
 }
@@ -636,43 +639,44 @@ var login = {
     templateUrl: './login.html',
     controller: 'LoginController',
     textservice: '<',
-
-    // this is a workaround, because in the current version of
-    // ui-router 1.0.0-beta.3 it's not possible to route a
-    // component using '&' binding to from parent to child
-    // here we need to to tell the root controller to
-    // tell the header-bar to display the logout button
-    // when the login component has successfully authenticated
-    // see https://github.com/angular-ui/ui-router/issues/3239
-    require: {
-        parentCtrl: '^^rootcomponent'
+    bindings: {
+        onToggleLoggedOutBtn: '&'
     }
-    ///////////////////////////////////////////////////////////
 };
 
 angular.module('hexaquiz.components.auth').component('login', login).config(["$stateProvider", "$urlServiceProvider", function ($stateProvider, $urlServiceProvider) {
     $stateProvider.state('auth', {
         redirectTo: 'auth.login',
-        url: '/auth',
-        template: '<div ui-view></div>'
-    }).state('auth.login', {
+        url: '/auth'
+    })
+
+    // https://github.com/angular-ui/ui-router/issues/3277
+
+    // .state('auth.login', {
+    //     url: '/login',
+    //     component: 'login'
+    // });
+    .state('login', {
         url: '/login',
         component: 'login'
     });
-    $urlServiceProvider.rules.otherwise('/auth/login'); // entry point of the app
+
+    // https://github.com/angular-ui/ui-router/issues/3277
+    // $urlServiceProvider.rules.otherwise('/auth/login'); // entry point of the app
+    $urlServiceProvider.rules.otherwise('/login'); // entry point of the app
 }]);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
 
-LoginController.$inject = ["TextService", "AuthService", "$state"];
-function LoginController(TextService, AuthService, $state) {
+LoginController.$inject = ["TextService", "AuthService", "$state", "$log"];
+function LoginController(TextService, AuthService, $state, $log) {
 
     var ctrl = this;
 
     ctrl.$onInit = function () {
-        console.log('LoginController');
-        console.log('parent : ', ctrl.parentCtrl);
+        $log.info('LoginController');
+        $log.info('ctrl : ', ctrl);
 
         ctrl.text = {
             signin: TextService.login.signin,
@@ -682,16 +686,11 @@ function LoginController(TextService, AuthService, $state) {
         ctrl.loginUser = function (e) {
             return AuthService.login(e.user).then(function () {
                 console.log('login from login controller');
-                // this is a workaround, because in the current version of
-                // ui-router 1.0.0-beta.3 it's not possible to route a
-                // component using '&' binding to from parent to child
-                // here we need to to tell the root controller to
-                // tell the header-bar to display the logout button
-                // when the login component has successfully authenticated
-                // see https://github.com/angular-ui/ui-router/issues/3239
-                // ctrl.parentCtrl.displayLogOutButton(e);
-                ctrl.parentCtrl.displayLogOutButton(true);
-                //////////////////////////////////////////////////////////
+                ctrl.onToggleLoggedOutBtn({
+                    $event: {
+                        loggedIn: true
+                    }
+                });
                 $state.go('app');
             }, function (reason) {
                 ctrl.errorMessage = reason.message;
@@ -706,13 +705,13 @@ angular.module('hexaquiz.components.auth').controller('LoginController', LoginCo
 'use strict';
 
 angular.module('hexaquiz.templates', []).run(['$templateCache', function ($templateCache) {
-  $templateCache.put('./root.html', '<div class="root"><header-bar logged-in="$ctrl.loggedIn"></header-bar><div ui-view></div></div>');
-  $templateCache.put('./app.html', '<div class="root"><div class="app"><div ui-view=""></div></div></div>');
+  $templateCache.put('./root.html', '<div class="root"><header-bar logged-in="$ctrl.loggedIn" on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)"></header-bar><div ui-view on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)"></div></div>');
+  $templateCache.put('./app.html', '<div class="root"><div class="app"><div ui-view class="app"></div></div></div>');
+  $templateCache.put('./header-bar.html', '<div class="container-fluid"><div class="row"><div class="col-md-12 header"><header><div class="col-md-4 header-padding"><span class="app-title">hexaquiz</span> <button type="button" class="btn btn-default btn-sm ng-binding" ng-show="$ctrl.loggedIn" ng-click="$ctrl.logout()">log out</button></div></header></div></div></div>');
   $templateCache.put('./questions.html', '<div class="questions"><nav questions="$ctrl.questions" is-prev-disabled="$ctrl.isPrevDisabled" on-nav-click="$ctrl.navTo($event)"></nav><questions-list question="$ctrl.questionsListQuestion" on-radio-changed="$ctrl.changeSelected($event)"></questions-list><questions-ribbon indexes="$ctrl.ribbonIndexes"></questions-ribbon></div>');
   $templateCache.put('./nav.html', '<div class="questions"><div class="container-fluid"><div class="row buttons-prev-next-hxf"><div class="col-xs-offset-3 col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.prev()" ng-disabled="$ctrl.isPrevDisabled">PREVIOUS</button></div><div class="col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.next()">NEXT</button></div></div></div></div>');
-  $templateCache.put('./header-bar.html', '<div class="container-fluid"><div class="row"><div class="col-md-12 header"><header><div class="col-md-4 header-padding"><span class="app-title">hexaquiz</span> <button type="button" class="btn btn-default btn-sm ng-binding" ng-show="$ctrl.loggedIn" ng-click="$ctrl.logout()">log out</button></div></header></div></div></div>');
+  $templateCache.put('./questions-list.html', '<div class="row"><div class="col-md-offset-3 col-md-6"><div class="question panel panel-success"><div class="panel-heading text-center">{{$ctrl.entries.question}}</div><div class="panel-body"><div class="list-group list-group-hxf"><ul ng-repeat="entry in $ctrl.entries.choices" class="list-group-item choices"><input id="{{entry}}" type="radio" name="answerRadio" ng-checked="$index == $ctrl.checkedQuestion" ng-click="$ctrl.radioHasChanged($index)"><label for="{{entry}}"><span class="entry">{{entry}}</span></label></ul></div></div></div></div></div>');
   $templateCache.put('./questions-ribbon.html', '<div class="row"><div class="col-xs-12"><div class="text-center counter-hxf">{{$ctrl.currentQuestionIdx}}/{{$ctrl.totalQuestionIdx}}</div></div></div>');
   $templateCache.put('./auth-form.html', '<div class="row"><div class="col-md-4 col-md-offset-4"><div class="panel panel-default"><div class="panel-heading panel-hxf-heading"><span class="glyphicon glyphicon-lock"></span> Login</div><div class="panel-body"><form class="form-horizontal" role="form" ng-submit="$ctrl.submitForm()"><div class="form-group"><label for="emailfield" class="col-sm-3 control-label">Email</label><div class="col-sm-9"><input type="email" name="email" class="form-control" id="emailfield" placeholder="Email" ng-model="$ctrl.user.email" ng-focus="$ctrl.onFocus($event)" required></div></div><div class="form-group"><label for="passfield" class="col-sm-3 control-label">Password</label><div class="col-sm-9"><input type="password" name="password" class="form-control" id="passfield" placeholder="Password" ng-model="$ctrl.user.password" ng-focus="$ctrl.onFocus($event)" required></div></div><div class="form-group last"><div class="col-sm-offset-3 col-sm-5"><button type="submit" class="btn btn-success btn-sm">{{ $ctrl.signButton }}</button> <button type="reset" class="btn btn-default btn-sm">{{ $ctrl.resetButton }}</button></div><div class="col-sm-4 wrong-hxf">{{ $ctrl.errorMessage }}</div></div></form></div><div class="panel-footer panel-hxf-footer"><div class="text-center"><span class="glyphicon glyphicon-info-sign"></span><a href="https://github.com/aestheticsdata/hexaquiz" target="_blank"> Github project page</a></div></div></div></div></div>');
-  $templateCache.put('./questions-list.html', '<div class="row"><div class="col-md-offset-3 col-md-6"><div class="question panel panel-success"><div class="panel-heading text-center">{{$ctrl.entries.question}}</div><div class="panel-body"><div class="list-group list-group-hxf"><ul ng-repeat="entry in $ctrl.entries.choices" class="list-group-item choices"><input id="{{entry}}" type="radio" name="answerRadio" ng-checked="$index == $ctrl.checkedQuestion" ng-click="$ctrl.radioHasChanged($index)"><label for="{{entry}}"><span class="entry">{{entry}}</span></label></ul></div></div></div></div></div>');
   $templateCache.put('./login.html', '<div class="login"><div class="container"><auth-form user="$ctrl.user" error-message="{{ $ctrl.errorMessage }}" sign-button="{{ $ctrl.text.signin }}" reset-button="{{ $ctrl.text.reset }}" on-submit="$ctrl.loginUser($event)"></auth-form><div class="row"><div class="col-md-12"><div class="text-center title-hxf">A quiz made with <span class="title-hxf-bold">AngularJS 1.5+</span> and <span class="title-hxf-bold">Firebase</span></div></div></div></div></div>');
 }]);})(window.angular);

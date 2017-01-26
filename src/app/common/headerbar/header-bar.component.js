@@ -2,7 +2,8 @@ var headerbar = {
     templateUrl: './header-bar.html',
     controller: 'HeaderBarController',
     bindings: {
-        loggedIn: '<'
+        loggedIn: '<',
+        onToggleLoggedOutBtn: '&'
     }
 };
 

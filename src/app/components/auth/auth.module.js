@@ -20,11 +20,13 @@ angular
                 .requireAuthentication()
                 .catch(function () {
                     console.log('auth catched');
-                    return $state.target('auth.login');
+                    // return $state.target('auth.login');
+                    return $state.target('login');
                 });
         });
         $transitions.onStart({
-            to: 'auth.*'
+            // to: 'auth.*'
+            to: 'login'
         }, function () {
             console.log('888');
             if (AuthService.isAuthenticated()) {

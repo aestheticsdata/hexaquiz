@@ -1,4 +1,4 @@
 <div class="root">
-    <header-bar logged-in="$ctrl.loggedIn"></header-bar>
-    <div ui-view></div>
+    <header-bar logged-in="$ctrl.loggedIn" on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)"></header-bar>
+    <div ui-view on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)"></div>
 </div>

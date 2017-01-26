@@ -2,18 +2,9 @@ var login = {
     templateUrl: './login.html',
     controller: 'LoginController',
     textservice:'<',
-
-    // this is a workaround, because in the current version of
-    // ui-router 1.0.0-beta.3 it's not possible to route a
-    // component using '&' binding to from parent to child
-    // here we need to to tell the root controller to
-    // tell the header-bar to display the logout button
-    // when the login component has successfully authenticated
-    // see https://github.com/angular-ui/ui-router/issues/3239
-    require: {
-        parentCtrl:'^^rootcomponent'
+    bindings: {
+        onToggleLoggedOutBtn: '&'
     }
-    ///////////////////////////////////////////////////////////
 };
 
 angular
@@ -24,11 +15,21 @@ angular
             .state('auth', {
                 redirectTo: 'auth.login',
                 url: '/auth',
-                template: '<div ui-view></div>'
+                // template: '<div ui-view class="auth"></div>'
             })
-            .state('auth.login', {
+
+            // https://github.com/angular-ui/ui-router/issues/3277
+
+            // .state('auth.login', {
+            //     url: '/login',
+            //     component: 'login'
+            // });
+            .state('login', {
                 url: '/login',
                 component: 'login'
             });
-        $urlServiceProvider.rules.otherwise('/auth/login'); // entry point of the app
+
+            // https://github.com/angular-ui/ui-router/issues/3277
+        // $urlServiceProvider.rules.otherwise('/auth/login'); // entry point of the app
+        $urlServiceProvider.rules.otherwise('/login'); // entry point of the app
     });
