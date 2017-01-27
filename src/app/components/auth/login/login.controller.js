@@ -21,6 +21,11 @@ function LoginController(TextService, AuthService, $state, AppStateService, $log
                             loggedIn: true
                         }
                     });
+                    ctrl.onUserNameAvailable({
+                        $event: {
+                            user: AuthService.getUser()
+                        }
+                    });
                     AppStateService.comingFromLogin = true;
                     $state.go('app');
                 }, function (reason) {

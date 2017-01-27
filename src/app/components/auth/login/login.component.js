@@ -3,7 +3,8 @@ var login = {
     controller: 'LoginController',
     textservice:'<',
     bindings: {
-        onToggleLoggedOutBtn: '&'
+        onToggleLoggedOutBtn: '&',
+        onUserNameAvailable: '&'
     }
 };
 

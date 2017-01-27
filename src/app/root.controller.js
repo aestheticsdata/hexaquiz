@@ -5,10 +5,17 @@ function RootController($log) {
         $log.debug('RootController');
 
         ctrl.loggedIn = false;
+        ctrl.userName = 'no name';
 
         ctrl.displayLogOutButton = function (e) {
             ctrl.loggedIn = e.loggedIn;
         };
+
+        ctrl.displayUserName = function (e) {
+            console.log('!!!!! username : ', e);
+            ctrl.userName = (e.user.email).substr(0,(e.user.email).indexOf('@'));
+
+        }
     };
 }
 

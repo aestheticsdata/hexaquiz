@@ -3,6 +3,7 @@ var headerbar = {
     controller: 'HeaderBarController',
     bindings: {
         loggedIn: '<',
+        userName: '@',
         onToggleLoggedOutBtn: '&'
     }
 };

@@ -1,4 +1,14 @@
 <div class="root">
-    <header-bar logged-in="$ctrl.loggedIn" on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)"></header-bar>
-    <div ui-view on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)"></div>
+
+    <header-bar
+            logged-in="$ctrl.loggedIn"
+            user-name="{{$ctrl.userName}}"
+            on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)">
+    </header-bar>
+
+    <div ui-view
+         on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)"
+         on-user-name-available="$ctrl.displayUserName($event)">
+    </div>
+
 </div>
