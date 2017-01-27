@@ -3,7 +3,7 @@
 angular.module('hexaquiz.common.questions').factory('QuestionsService', QuestionsService);
 
 
-function QuestionsService($http) {
+function QuestionsService(AuthService, $http, $firebaseObject) {
 
     var qs = {
         questions         : [],
@@ -13,7 +13,8 @@ function QuestionsService($http) {
         getScore          : _getScore,
         retrieveQuestions : _retrieveQuestions,
         setQuestions      : _setQuestions,
-        getQuestions      : _getQuestions
+        getQuestions      : _getQuestions,
+        ref               : firebase.database().ref(),
     };
 
     return qs;
@@ -27,15 +28,17 @@ function QuestionsService($http) {
 
     function _retrieveQuestions() {
 
-        return $http.get('./mock_data/questions.json');
+        // return $http.get('./mock_data/questions.json');
+        return $firebaseObject(qs.ref).$loaded();
     }
 
 
-    function _setQuestions(questions) {
+    function _setQuestions(data) {
 
-        console.log('QuestionsService::setQuestions : ' , questions);
+        console.log('QuestionsService::setQuestions : ' , data.questions);
+        console.log('length : ', data.questions.length);
 
-        qs.questions = questions;
+        qs.questions = R.values(data.questions);
 
         // if not reloading the page when logged out and loggedin again,
         // the currentAnswers array will grow each time
@@ -43,7 +46,9 @@ function QuestionsService($http) {
         qs.currentAnswers = [];
         ///////////////////////////////////////////////////////////////
 
-        for (var i=0; i<qs.questions.length; i++) {
+
+
+        for (var i=0, questionslength=qs.questions.length; i<questionslength; i++) {
             qs.currentAnswers.push(-1); // -1 is a flag to check if a radio button has been changed
         }
 

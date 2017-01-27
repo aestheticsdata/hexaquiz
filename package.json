@@ -37,6 +37,7 @@
     "angular-ui-router": "^1.0.0-rc.1",
     "angularfire": "^2.2.0",
     "bootstrap": "^3.3.7",
-    "firebase": "^3.6.5"
+    "firebase": "^3.6.5",
+    "ramda": "^0.23.0"
   }
 }

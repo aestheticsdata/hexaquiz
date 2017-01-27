@@ -1,8 +1,8 @@
 [
         {
-          "question": "Where is the CERN ?",
-          "choices": ["France", "Swiss", "France and Swiss"],
-          "correctAnswer": 2
+            "question": "Where is the CERN ?",
+            "choices": ["France", "Swiss", "France and Swiss"],
+            "correctAnswer": 2
         },
         {
             "question": "What is Backbone.js ?",
@@ -40,3 +40,4 @@
 	        "correctAnswer": 0
         }
     ]
+
