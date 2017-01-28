@@ -2,7 +2,7 @@
   "questions": {
     "a":{
       "question": "Where is the CERN ?",
-      "choices": ["France", "Swiss", "France and Swiss"],
+      "choices": ["France", "Swiss", "France and Swiss", "Germany"],
       "correctAnswer": 2
     },
     "b":{
