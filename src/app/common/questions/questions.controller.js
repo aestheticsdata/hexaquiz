@@ -18,6 +18,7 @@ function QuestionsController($state, QuestionsService, hlg) {
         ctrl.isPrevDisabled = (parseInt(currentIndex) === 0);
 
         ctrl.navTo = function (e) {
+            var answered = true;
             switch(e.dir){
                 case 'prev':
                     $state.go('questions', {
@@ -26,12 +27,16 @@ function QuestionsController($state, QuestionsService, hlg) {
                     break;
                 case 'next':
                     if (parseInt(currentIndex) === questionsLength-1) {
-                        // $state.go('score');
-                        console.log('..........');
-                        console.log(QuestionsService.currentAnswers);
-                        console.log(typeof QuestionsService.currentAnswers[0]);
-                        console.log('..........');
-
+                        for (var i=0, l=QuestionsService.currentAnswers.length; i<l;i++){
+                            if (QuestionsService.currentAnswers[i] === -1) {
+                                answered = false;
+                            }
+                        }
+                        if (!answered) {
+                            window.alert('you did not anwser to some questions');
+                        } else {
+                            // $state.go('score');
+                        }
                     } else {
                         $state.go('questions', {
                             idx:parseInt(currentIndex)+1
@@ -46,7 +51,7 @@ function QuestionsController($state, QuestionsService, hlg) {
         ctrl.questionsListQuestion = {
             current: ctrl.questions[currentIndex],
             checkedQuestion: function () {
-                return QuestionsService.currentAnswers[currentIndex] === -1 ? 0 : QuestionsService.currentAnswers[currentIndex];
+                return QuestionsService.currentAnswers[currentIndex] === -1 ? -1 : QuestionsService.currentAnswers[currentIndex];
             }
         };
 
