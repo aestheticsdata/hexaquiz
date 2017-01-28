@@ -18,7 +18,7 @@ angular
                 component: 'questions',
                 resolve: {
                     transitionAlias: '$transition$', // see https://github.com/angular-ui/ui-router/issues/3110
-                    questions: function (QuestionsService) {
+                    /*questions: function (QuestionsService) {
                         console.log('resolve questions');
                         return QuestionsService.retrieveQuestions()
                             .then(
@@ -33,7 +33,7 @@ angular
                                     console.log('error while retrieving questions : ', err);
                                 }
                             )
-                    }
+                    }*/
                 }
             });
     });

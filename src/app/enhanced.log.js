@@ -90,8 +90,8 @@ function EnhancedLog($log) {
             'background: LightGreen;        color:black',
             'background: MediumSpringGreen; color:black',
             'background: SpringGreen;       color:black',
-            'background: MediumSeeGreen;    color:white',
-            'background: SeeGreen;          color:white',
+            'background: MediumSeaGreen;    color:white',
+            'background: SeaGreen;          color:white',
             'background: ForestGreen;       color:white',
             'background: DarkGreen;         color:white',
             'background: YellowGreen;       color:white',
@@ -125,7 +125,8 @@ function EnhancedLog($log) {
 
     function _lg(cat, level, txt, arg) {
         var style = LOOKUPCAT[cat],
-            txt = '%c'+txt;
+            txt = '%c'+txt,
+            arg = arg || '';
 
         // if a level is bigger than the array length, then modulo it
         (COLORS[cat].length<level) && (level = level % COLORS[cat].length);

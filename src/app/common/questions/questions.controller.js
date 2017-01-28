@@ -1,4 +1,4 @@
-function QuestionsController($state, QuestionsService) {
+function QuestionsController($state, QuestionsService, hlg) {
 
     var ctrl = this,
         currentIndex = -1,
@@ -51,7 +51,10 @@ function QuestionsController($state, QuestionsService) {
         };
 
         ctrl.changeSelected = function (e) {
+            hlg.l('green', 3, 'changeSelected', e);
+            hlg.l('green', 6, 'changeSelected', QuestionsService.currentAnswers);
             QuestionsService.currentAnswers[currentIndex] = e.idx;
+            hlg.l('green', 9, 'changeSelected', QuestionsService.currentAnswers);
         };
 
 
