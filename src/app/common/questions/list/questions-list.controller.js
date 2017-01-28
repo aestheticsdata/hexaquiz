@@ -1,16 +1,15 @@
-function QuestionsListController(AuthService, $log) {
+function QuestionsListController($log, hlg) {
 
     var ctrl = this;
 
     ctrl.$onInit = function () {
 
         $log.info('QuestionsListController');
-        $log.info('get auth : ');
-        $log.info(AuthService);
-        $log.info(AuthService.getAuth());
+        hlg.l('blue', 0, 'test de hlg : ', ctrl);
 
         ctrl.entries = ctrl.question.current;
 
+        $log.info('questions list ctrl : ', ctrl.question);
         ctrl.checkedQuestion = ctrl.question.checkedQuestion();
 
         ctrl.radioHasChanged = function (idx) {

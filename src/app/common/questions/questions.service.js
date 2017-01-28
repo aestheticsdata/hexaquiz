@@ -3,7 +3,7 @@
 angular.module('hexaquiz.common.questions').factory('QuestionsService', QuestionsService);
 
 
-function QuestionsService(AuthService, $http, $firebaseObject) {
+function QuestionsService($http, $firebaseObject, $log) {
 
     var qs = {
         questions         : [],
@@ -35,8 +35,7 @@ function QuestionsService(AuthService, $http, $firebaseObject) {
 
     function _setQuestions(data) {
 
-        console.log('QuestionsService::setQuestions : ' , data.questions);
-        console.log('length : ', data.questions.length);
+        $log.info('QuestionsService::setQuestions : ' , data.questions);
 
         qs.questions = R.values(data.questions);
 
@@ -51,8 +50,6 @@ function QuestionsService(AuthService, $http, $firebaseObject) {
         for (var i=0, questionslength=qs.questions.length; i<questionslength; i++) {
             qs.currentAnswers.push(-1); // -1 is a flag to check if a radio button has been changed
         }
-
-        console.log(qs.currentAnswers);
 
         return true;
     }
@@ -76,7 +73,7 @@ function QuestionsService(AuthService, $http, $firebaseObject) {
 
         for(var i=0; i<qs.questions.length; i++) {
             (qs.currentAnswers[i] === -1) && (qs.currentAnswers[i] = 0);
-            console.log('qs.currentAnswers', qs.currentAnswers);
+            $log.info('qs.currentAnswers', qs.currentAnswers);
             (qs.questions[i].correctAnswer === qs.currentAnswers[i]) && qs.score++;
         }
         return qs.score;
