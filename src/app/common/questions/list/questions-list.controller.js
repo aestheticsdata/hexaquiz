@@ -5,7 +5,6 @@ function QuestionsListController($log, hlg) {
     ctrl.$onInit = function () {
 
         $log.info('QuestionsListController');
-        hlg.l('blue', 0, 'test de hlg : ', ctrl);
 
         ctrl.entries = ctrl.question.current;
 

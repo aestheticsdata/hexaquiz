@@ -7,25 +7,15 @@ angular.module('hexaquiz', ['hexaquiz.common', 'hexaquiz.components', 'hexaquiz.
 'use strict';
 'use strict';
 
-angular.module('hexaquiz.common', ['ui.router', 'hexaquiz.common.questions']).run(["$state", "$uiRouter", function ($state, $uiRouter) {
-    var vis = window['ui-router-visualizer'];
-    vis.visualizer($uiRouter);
-}]);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
 angular.module('hexaquiz.components', ['hexaquiz.components.auth', 'hexaquiz.components.nav']);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
 
-angular.module('hexaquiz.components.nav', []);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-angular.module('hexaquiz.common.questions', ['ui.router']);})(window.angular);
+angular.module('hexaquiz.common', ['ui.router', 'hexaquiz.common.questions']).run(["$state", "$uiRouter", function ($state, $uiRouter) {
+    var vis = window['ui-router-visualizer'];
+    vis.visualizer($uiRouter);
+}]);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -89,6 +79,16 @@ angular.module('hexaquiz.components.auth', ['ui.router', 'firebase']).config(["C
 'use strict';
 'use strict';
 
+angular.module('hexaquiz.components.nav', []);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+angular.module('hexaquiz.common.questions', ['ui.router']);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
 function AppStateService() {
     var state = {
         comingFromLogin: false
@@ -101,6 +101,8 @@ angular.module('hexaquiz').factory('AppStateService', AppStateService);})(window
 'use strict';
 'use strict';
 
+// usage : hlg.l('blue', 3, 'message', arg);
+
 EnhancedLog.$inject = ["$log"];
 function EnhancedLog($log) {
     var log = {
@@ -112,7 +114,8 @@ function EnhancedLog($log) {
         purple: ['background: Lavender;        color: black', 'background: Thistle;         color: white', 'background: Plum;            color: white', 'background: Violet;          color: white', 'background: Orchid;          color: white', 'background: Fuchsia;         color: white', 'background: MediumOrchid;    color: white', 'background: MediumPurple;    color: white', 'background: BlueViolet;      color: white', 'background: DarkViolet;      color: white', 'background: DarkOrchid;      color: white', 'background: Purple;          color: white', 'background: RebeccaPurple;   color: white', 'background: Indigo;          color: white', 'background: MediumSlateBlue; color: white', 'background: SlateBlue;       color: white', 'background: DarkSlateBllue;  color: white'],
         blue: ['background: Cyan;           color: black', 'background: LightCyan;      color: black', 'background: PaleTurquoise;  color: black', 'background: AquaMarine;     color: black', 'background: Turquoise;      color: black', 'background: DarkTurquoise;  color: white', 'background: CadetBlue;      color: white', 'background: SteelBlue;      color: white', 'background: LightSteelBlue; color: white', 'background: PowderBlue;     color: white', 'background: SkyBlue;        color: white', 'background: DeepSkyBlue;    color: white', 'background: DodgerBlue;     color: white', 'background: RoyalBlue;      color: white', 'background: Blue;           color: white', 'background: MediumBlue;     color: white', 'background: Navy;           color: white', 'background: MidnightBlue;   color: white'],
         yellow: ['background: Gold;                 color: black', 'background: Yellow;               color: black', 'background: LightYellow;          color: black', 'background: LemonChiffon;         color: black', 'background: LightGoldenrodYellow; color: black', 'background: PapayaWhip;           color: black', 'background: Moccasin;             color: black', 'background: PeachPuff;            color: black', 'background: PaleGoldenrod;        color: black', 'background: Khaki;                color: black', 'background: DarkKhaki;            color: white'],
-        red: ['background: IndianRed;   color: white', 'background: LightCoral;  color: black', 'background: Salmon;      color: black', 'background: DarkSalmon;  color: black', 'background: LightSalmon; color: black', 'background: Crimson;     color: white', 'background: Red;         color: White', 'background: FireBrick;   color: white', 'background: DarkRed;     color: white']
+        red: ['background: IndianRed;   color: white', 'background: LightCoral;  color: black', 'background: Salmon;      color: black', 'background: DarkSalmon;  color: black', 'background: LightSalmon; color: black', 'background: Crimson;     color: white', 'background: Red;         color: White', 'background: FireBrick;   color: white', 'background: DarkRed;     color: white'],
+        green: ['background: GreenYellow;       color:black', 'background: Chartreuse;        color:black', 'background: LawnGreen;         color:black', 'background: Lime;              color:black', 'background: LimeGreen;         color:black', 'background: PaleGreen;         color:black', 'background: LightGreen;        color:black', 'background: MediumSpringGreen; color:black', 'background: SpringGreen;       color:black', 'background: MediumSeeGreen;    color:white', 'background: SeeGreen;          color:white', 'background: ForestGreen;       color:white', 'background: DarkGreen;         color:white', 'background: YellowGreen;       color:white', 'background: OliveDrab;         color:white', 'background: Olive;             color:white', 'background: DarkOliveGreen;    color:white', 'background: DarkSeaGreen;      color:white', 'background: LightSeaGreen;     color:white', 'background: DarkCyan;          color:white']
     },
         STYLES = {
         default: '',
@@ -236,51 +239,101 @@ angular.module('hexaquiz.common').controller('AppController', AppController);})(
 'use strict';
 'use strict';
 
-var headerbar = {
-    templateUrl: './header-bar.html',
-    controller: 'HeaderBarController',
-    bindings: {
-        loggedIn: '<',
-        userName: '@',
-        onToggleLoggedOutBtn: '&'
-    }
-};
+// real auth data
 
-angular.module('hexaquiz.common').component('headerBar', headerbar);})(window.angular);
+angular.module('hexaquiz.components.auth').factory('CONFIG', CONFIG);
+
+function CONFIG() {
+
+    var config = {
+        apiKey: "AIzaSyClQMBtHySSTr9Iw7zCHZhAFhNzXuXo434",
+        authDomain: "hexaquiz-6133e.firebaseapp.com",
+        databaseURL: "https://hexaquiz-6133e.firebaseio.com",
+        storageBucket: "hexaquiz-6133e.appspot.com",
+        messagingSenderId: "556453159537"
+    };
+
+    return config;
+}})(window.angular);
+(function(angular){
+'use strict';
+////////////////////////////////////////////////////////////
+// this file is the config service without real auth data //
+////////////////////////////////////////////////////////////
+
+// angular
+//     .module('hexaquiz.components.auth')
+//     .factory('CONFIG',CONFIG);
+//
+// function CONFIG() {
+//
+//     var config = {
+//         apiKey: "",
+//         authDomain: "",
+//         databaseURL: "",
+//         storageBucket: "",
+//         messagingSenderId: ""
+//     };
+//
+//     return config;
+// }
+"use strict";})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
 
-HeaderBarController.$inject = ["AuthService", "$state", "$log"];
-function HeaderBarController(AuthService, $state, $log) {
-    var ctrl = this;
+AuthService.$inject = ["$firebaseAuth"];
+function AuthService($firebaseAuth) {
 
-    ctrl.$onInit = function () {
-        console.log('HeaderBarController');
-        console.log('%c ctrl.loggedIn', 'background:teal; color:aqua; display:block', ctrl.loggedIn);
+    var auth = $firebaseAuth(),
+        authData = null;
+
+    function storeAuthData(response) {
+        authData = response;
+        return authData;
+    }
+
+    function onSignIn(user) {
+        authData = user;
+        return auth.$requireSignIn();
+    }
+
+    function clearAuthData() {
+        authData = null;
+    }
+
+    this.login = function (user) {
+        return auth.$signInWithEmailAndPassword(user.email, user.password).then(storeAuthData);
     };
 
-    ctrl.$onChanges = function (changes) {
-        $log.info('headerbar on change');
-        $log.info(changes.loggedIn);
-        // ctrl.headerBarLoggedIn = (angular.copy(changes.loggedIn)).currentValue;
+    this.register = function (user) {
+        return auth.$createUserWithEmailAndPassword(user.email, user.password).then(storeAuthData);
     };
 
-    ctrl.logout = function () {
-        console.log('log out from header bar');
-        AuthService.logout().then(function () {
-            ctrl.onToggleLoggedOutBtn({
-                $event: {
-                    loggedIn: false
-                }
-            });
-            // $state.go('auth.login');
-            $state.go('login');
-        });
+    this.logout = function () {
+        return auth.$signOut().then(clearAuthData);
+    };
+
+    this.requireAuthentication = function () {
+        return auth.$waitForSignIn().then(onSignIn);
+    };
+
+    this.isAuthenticated = function () {
+        return !!authData;
+    };
+
+    this.getAuth = function () {
+        return auth.$getAuth();
+    };
+
+    this.getUser = function () {
+        if (authData) {
+            return authData;
+        }
     };
 }
 
-angular.module('hexaquiz.common').controller('HeaderBarController', HeaderBarController);})(window.angular);
+angular.module('hexaquiz.components.auth').service('AuthService', AuthService);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -328,6 +381,55 @@ function QuestionsNavController() {
 }
 
 angular.module('hexaquiz.components.nav').controller('QuestionsNavController', QuestionsNavController);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+var headerbar = {
+    templateUrl: './header-bar.html',
+    controller: 'HeaderBarController',
+    bindings: {
+        loggedIn: '<',
+        userName: '@',
+        onToggleLoggedOutBtn: '&'
+    }
+};
+
+angular.module('hexaquiz.common').component('headerBar', headerbar);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+HeaderBarController.$inject = ["AuthService", "$state", "$log"];
+function HeaderBarController(AuthService, $state, $log) {
+    var ctrl = this;
+
+    ctrl.$onInit = function () {
+        console.log('HeaderBarController');
+        console.log('%c ctrl.loggedIn', 'background:teal; color:aqua; display:block', ctrl.loggedIn);
+    };
+
+    ctrl.$onChanges = function (changes) {
+        $log.info('headerbar on change');
+        $log.info(changes.loggedIn);
+        // ctrl.headerBarLoggedIn = (angular.copy(changes.loggedIn)).currentValue;
+    };
+
+    ctrl.logout = function () {
+        console.log('log out from header bar');
+        AuthService.logout().then(function () {
+            ctrl.onToggleLoggedOutBtn({
+                $event: {
+                    loggedIn: false
+                }
+            });
+            // $state.go('auth.login');
+            $state.go('login');
+        });
+    };
+}
+
+angular.module('hexaquiz.common').controller('HeaderBarController', HeaderBarController);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -513,179 +615,6 @@ function QuestionsService($http, $firebaseObject, $log) {
 'use strict';
 'use strict';
 
-// real auth data
-
-angular.module('hexaquiz.components.auth').factory('CONFIG', CONFIG);
-
-function CONFIG() {
-
-    var config = {
-        apiKey: "AIzaSyClQMBtHySSTr9Iw7zCHZhAFhNzXuXo434",
-        authDomain: "hexaquiz-6133e.firebaseapp.com",
-        databaseURL: "https://hexaquiz-6133e.firebaseio.com",
-        storageBucket: "hexaquiz-6133e.appspot.com",
-        messagingSenderId: "556453159537"
-    };
-
-    return config;
-}})(window.angular);
-(function(angular){
-'use strict';
-////////////////////////////////////////////////////////////
-// this file is the config service without real auth data //
-////////////////////////////////////////////////////////////
-
-// angular
-//     .module('hexaquiz.components.auth')
-//     .factory('CONFIG',CONFIG);
-//
-// function CONFIG() {
-//
-//     var config = {
-//         apiKey: "",
-//         authDomain: "",
-//         databaseURL: "",
-//         storageBucket: "",
-//         messagingSenderId: ""
-//     };
-//
-//     return config;
-// }
-"use strict";})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-AuthService.$inject = ["$firebaseAuth"];
-function AuthService($firebaseAuth) {
-
-    var auth = $firebaseAuth(),
-        authData = null;
-
-    function storeAuthData(response) {
-        authData = response;
-        return authData;
-    }
-
-    function onSignIn(user) {
-        authData = user;
-        return auth.$requireSignIn();
-    }
-
-    function clearAuthData() {
-        authData = null;
-    }
-
-    this.login = function (user) {
-        return auth.$signInWithEmailAndPassword(user.email, user.password).then(storeAuthData);
-    };
-
-    this.register = function (user) {
-        return auth.$createUserWithEmailAndPassword(user.email, user.password).then(storeAuthData);
-    };
-
-    this.logout = function () {
-        return auth.$signOut().then(clearAuthData);
-    };
-
-    this.requireAuthentication = function () {
-        return auth.$waitForSignIn().then(onSignIn);
-    };
-
-    this.isAuthenticated = function () {
-        return !!authData;
-    };
-
-    this.getAuth = function () {
-        return auth.$getAuth();
-    };
-
-    this.getUser = function () {
-        if (authData) {
-            return authData;
-        }
-    };
-}
-
-angular.module('hexaquiz.components.auth').service('AuthService', AuthService);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-var questionsList = {
-    bindings: {
-        question: '<',
-        onRadioChanged: '&'
-    },
-    templateUrl: './questions-list.html',
-    controller: 'QuestionsListController'
-};
-
-angular.module('hexaquiz.common.questions').component('questionsList', questionsList);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-QuestionsListController.$inject = ["$log", "hlg"];
-function QuestionsListController($log, hlg) {
-
-    var ctrl = this;
-
-    ctrl.$onInit = function () {
-
-        $log.info('QuestionsListController');
-        hlg.l('blue', 0, 'test de hlg : ', ctrl);
-
-        ctrl.entries = ctrl.question.current;
-
-        $log.info('questions list ctrl : ', ctrl.question);
-        ctrl.checkedQuestion = ctrl.question.checkedQuestion();
-
-        ctrl.radioHasChanged = function (idx) {
-            console.log('radio has changed : ', idx);
-            ctrl.onRadioChanged({
-                $event: {
-                    idx: idx
-                }
-            });
-        };
-    };
-}
-
-angular.module('hexaquiz.common.questions').controller('QuestionsListController', QuestionsListController);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-var questionsRibbon = {
-    bindings: {
-        indexes: '<'
-    },
-    templateUrl: './questions-ribbon.html',
-    controller: 'QuestionsRibbonController'
-};
-
-angular.module('hexaquiz.common.questions').component('questionsRibbon', questionsRibbon);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-function QuestionsRibbonController() {
-
-    var ctrl = this;
-
-    this.$onInit = function () {
-
-        ctrl.currentQuestionIdx = ctrl.indexes.current;
-        ctrl.totalQuestionIdx = ctrl.indexes.total;
-    };
-}
-
-angular.module('hexaquiz.common.questions').controller('QuestionsRibbonController', QuestionsRibbonController);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
 var authForm = {
     bindings: {
         user: '<',
@@ -812,6 +741,79 @@ function LoginController(TextService, AuthService, $state, AppStateService, $log
 }
 
 angular.module('hexaquiz.components.auth').controller('LoginController', LoginController);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+var questionsList = {
+    bindings: {
+        question: '<',
+        onRadioChanged: '&'
+    },
+    templateUrl: './questions-list.html',
+    controller: 'QuestionsListController'
+};
+
+angular.module('hexaquiz.common.questions').component('questionsList', questionsList);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+QuestionsListController.$inject = ["$log", "hlg"];
+function QuestionsListController($log, hlg) {
+
+    var ctrl = this;
+
+    ctrl.$onInit = function () {
+
+        $log.info('QuestionsListController');
+
+        ctrl.entries = ctrl.question.current;
+
+        $log.info('questions list ctrl : ', ctrl.question);
+        ctrl.checkedQuestion = ctrl.question.checkedQuestion();
+
+        ctrl.radioHasChanged = function (idx) {
+            console.log('radio has changed : ', idx);
+            ctrl.onRadioChanged({
+                $event: {
+                    idx: idx
+                }
+            });
+        };
+    };
+}
+
+angular.module('hexaquiz.common.questions').controller('QuestionsListController', QuestionsListController);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+var questionsRibbon = {
+    bindings: {
+        indexes: '<'
+    },
+    templateUrl: './questions-ribbon.html',
+    controller: 'QuestionsRibbonController'
+};
+
+angular.module('hexaquiz.common.questions').component('questionsRibbon', questionsRibbon);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+function QuestionsRibbonController() {
+
+    var ctrl = this;
+
+    this.$onInit = function () {
+
+        ctrl.currentQuestionIdx = ctrl.indexes.current;
+        ctrl.totalQuestionIdx = ctrl.indexes.total;
+    };
+}
+
+angular.module('hexaquiz.common.questions').controller('QuestionsRibbonController', QuestionsRibbonController);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';

@@ -79,6 +79,28 @@ function EnhancedLog($log) {
             'background: Red;         color: White',
             'background: FireBrick;   color: white',
             'background: DarkRed;     color: white'
+        ],
+        green: [
+            'background: GreenYellow;       color:black',
+            'background: Chartreuse;        color:black',
+            'background: LawnGreen;         color:black',
+            'background: Lime;              color:black',
+            'background: LimeGreen;         color:black',
+            'background: PaleGreen;         color:black',
+            'background: LightGreen;        color:black',
+            'background: MediumSpringGreen; color:black',
+            'background: SpringGreen;       color:black',
+            'background: MediumSeeGreen;    color:white',
+            'background: SeeGreen;          color:white',
+            'background: ForestGreen;       color:white',
+            'background: DarkGreen;         color:white',
+            'background: YellowGreen;       color:white',
+            'background: OliveDrab;         color:white',
+            'background: Olive;             color:white',
+            'background: DarkOliveGreen;    color:white',
+            'background: DarkSeaGreen;      color:white',
+            'background: LightSeaGreen;     color:white',
+            'background: DarkCyan;          color:white'
         ]
     },
     STYLES = {
