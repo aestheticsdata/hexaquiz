@@ -1,4 +1,4 @@
-function QuestionsController($state, QuestionsService, hlg) {
+function QuestionsController($state, QuestionsService, ScoreService, hlg) {
 
     var ctrl = this,
         currentIndex = -1,
@@ -35,7 +35,8 @@ function QuestionsController($state, QuestionsService, hlg) {
                         if (!answered) {
                             window.alert('you did not anwser to some questions');
                         } else {
-                            // $state.go('score');
+                            ScoreService.setScore(128);
+                            $state.go('score');
                         }
                     } else {
                         $state.go('questions', {
