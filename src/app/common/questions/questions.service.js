@@ -1,4 +1,4 @@
-// QuestionsService.js
+// questions.service.js
 
 angular.module('hexaquiz.common.questions').factory('QuestionsService', QuestionsService);
 
@@ -8,9 +8,9 @@ function QuestionsService($http, $firebaseObject, $log) {
     var qs = {
         questions         : [],
         currentAnswers    : [],
-        score             : 0,
-        setScore          : _setScore,
-        getScore          : _getScore,
+        // score             : 0,
+        // setScore          : _setScore,
+        // getScore          : _getScore,
         retrieveQuestions : _retrieveQuestions,
         setQuestions      : _setQuestions,
         getQuestions      : _getQuestions,
@@ -61,21 +61,21 @@ function QuestionsService($http, $firebaseObject, $log) {
     }
 
 
-    function _setScore(score) {
-
-        qs.score = score;
-
-        return true;
-    }
-
-
-    function _getScore(){
-
-        for(var i=0; i<qs.questions.length; i++) {
-            (qs.currentAnswers[i] === -1) && (qs.currentAnswers[i] = 0);
-            $log.info('qs.currentAnswers', qs.currentAnswers);
-            (qs.questions[i].correctAnswer === qs.currentAnswers[i]) && qs.score++;
-        }
-        return qs.score;
-    }
+    // function _setScore(score) {
+    //
+    //     qs.score = score;
+    //
+    //     return true;
+    // }
+    //
+    //
+    // function _getScore(){
+    //
+    //     for(var i=0; i<qs.questions.length; i++) {
+    //         (qs.currentAnswers[i] === -1) && (qs.currentAnswers[i] = 0);
+    //         $log.info('qs.currentAnswers', qs.currentAnswers);
+    //         (qs.questions[i].correctAnswer === qs.currentAnswers[i]) && qs.score++;
+    //     }
+    //     return qs.score;
+    // }
 }

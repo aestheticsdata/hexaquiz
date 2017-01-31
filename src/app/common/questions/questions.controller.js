@@ -35,7 +35,7 @@ function QuestionsController($state, QuestionsService, ScoreService, hlg) {
                         if (!answered) {
                             window.alert('you did not anwser to some questions');
                         } else {
-                            ScoreService.setScore(128);
+                            ScoreService.setScore();
                             $state.go('score');
                         }
                     } else {
