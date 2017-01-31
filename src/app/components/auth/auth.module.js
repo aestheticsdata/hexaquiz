@@ -35,10 +35,21 @@ angular
         });
 
         // prevent direct access to questions even when authenticated
-
         // cause a transition rejection but no flickering
         $transitions.onStart({
             to: 'questions'
+        }, function () {
+            if (!AppStateService.comingFromLogin) {
+                AuthService.logout().then(function () {
+                    $state.go('login');
+                })
+            }
+        });
+
+        // prevent direct access to questions even when authenticated
+        // cause a transition rejection but no flickering
+        $transitions.onStart({
+            to: 'score'
         }, function () {
             if (!AppStateService.comingFromLogin) {
                 AuthService.logout().then(function () {
