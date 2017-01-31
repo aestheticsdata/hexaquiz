@@ -1,4 +1,4 @@
-function QuestionsController($state, QuestionsService, ScoreService, hlg) {
+function QuestionsController($state, QuestionsService, ScoreService, AppStateService, hlg, $log) {
 
     var ctrl = this,
         currentIndex = -1,
@@ -6,9 +6,10 @@ function QuestionsController($state, QuestionsService, ScoreService, hlg) {
 
     ctrl.$onInit = function () {
 
-        console.log('QuestionsController');
+        hlg.l('red', 6, 'QuestionsController', '');
         console.log('this.questions : ', ctrl.questions);
 
+        ScoreService.init();
 
         questionsLength = ctrl.questions.length;
 
@@ -33,7 +34,7 @@ function QuestionsController($state, QuestionsService, ScoreService, hlg) {
                             }
                         }
                         if (!answered) {
-                            window.alert('you did not anwser to some questions');
+                            window.alert('you did not answer to some questions');
                         } else {
                             ScoreService.setScore();
                             $state.go('score');
@@ -57,8 +58,6 @@ function QuestionsController($state, QuestionsService, ScoreService, hlg) {
         };
 
         ctrl.changeSelected = function (e) {
-            hlg.l('green', 3, 'changeSelected', e);
-            hlg.l('green', 6, 'changeSelected', QuestionsService.currentAnswers);
             QuestionsService.currentAnswers[currentIndex] = e.idx;
             hlg.l('green', 9, 'changeSelected', QuestionsService.currentAnswers);
         };

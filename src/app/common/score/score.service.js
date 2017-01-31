@@ -1,23 +1,27 @@
 function ScoreService(QuestionsService, $log) {
     var qs = QuestionsService,
         score = {
-            score:0,
+            _score:0,
+            init: _init,
             setScore: _setScore,
             getScore: _getScore
         };
     return score;
 
-    function _getScore() {
-        return this.score;
+    // re-init score when logged out and logged in again
+    function _init() {
+        this._score = 0;
     }
 
-    function _setScore(){
-        for(var i=0; i<QuestionsService.questions.length; i++) {
+    function _setScore() {
+        for(var i=0, l=qs.questions.length; i<l; i++) {
             (qs.currentAnswers[i] === -1) && (qs.currentAnswers[i] = 0);
-            $log.debug('QuestionsService.currentAnswers', QuestionsService.currentAnswers);
-            (qs.questions[i].correctAnswer === qs.currentAnswers[i]) && this.score++;
+            (qs.questions[i].correctAnswer === qs.currentAnswers[i]) && this._score++;
         }
-        return this.score;
+    }
+
+    function _getScore() {
+        return this._score;
     }
 }
 

@@ -7,7 +7,7 @@ angular
         var config = CONFIGProvider.$get();
         firebase.initializeApp(config);
     })
-    .run(function ($transitions, $state, AuthService, AppStateService, $log) {
+    .run(function ($transitions, $state, AuthService, AppStateService, QuestionsService, $log, hlg) {
         $transitions.onStart({
             to: function (state) {
                 $log.info('%c $transitions state : ', 'background: green; color: white; display: block;',state);
@@ -36,7 +36,7 @@ angular
 
         // prevent direct access to questions even when authenticated
         // cause a transition rejection but no flickering
-        $transitions.onStart({
+        $transitions.onBefore({
             to: 'questions'
         }, function () {
             if (!AppStateService.comingFromLogin) {
@@ -44,6 +44,14 @@ angular
                     $state.go('login');
                 })
             }
+        });
+
+        // re-init selected answers when logout and re-login without
+        // reloading the page
+        $transitions.onBefore({
+            to:'app'
+        }, function () {
+            QuestionsService.initCurrentAnswers();
         });
 
         // prevent direct access to questions even when authenticated

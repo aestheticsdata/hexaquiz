@@ -6,15 +6,13 @@ angular.module('hexaquiz.common.questions').factory('QuestionsService', Question
 function QuestionsService($http, $firebaseObject, $log) {
 
     var qs = {
-        questions         : [],
-        currentAnswers    : [],
-        // score             : 0,
-        // setScore          : _setScore,
-        // getScore          : _getScore,
-        retrieveQuestions : _retrieveQuestions,
-        setQuestions      : _setQuestions,
-        getQuestions      : _getQuestions,
-        ref               : firebase.database().ref(),
+        questions          : [],
+        currentAnswers     : [],
+        initCurrentAnswers : _initCurrentAnswers,
+        retrieveQuestions  : _retrieveQuestions,
+        setQuestions       : _setQuestions,
+        getQuestions       : _getQuestions,
+        ref                : firebase.database().ref(),
     };
 
     return qs;
@@ -39,19 +37,21 @@ function QuestionsService($http, $firebaseObject, $log) {
 
         qs.questions = R.values(data.questions);
 
-        // if not reloading the page when logged out and loggedin again,
+        qs.initCurrentAnswers();
+
+        return true;
+    }
+
+    function _initCurrentAnswers() {
+        // if not reloading the page when logged out and logged in again,
         // the currentAnswers array will grow each time
         // without being reinitialized
         qs.currentAnswers = [];
         ///////////////////////////////////////////////////////////////
 
-
-
         for (var i=0, questionslength=qs.questions.length; i<questionslength; i++) {
             qs.currentAnswers.push(-1); // -1 is a flag to check if a radio button has been changed
         }
-
-        return true;
     }
 
 
@@ -59,23 +59,4 @@ function QuestionsService($http, $firebaseObject, $log) {
 
         return idx ? qs.questions[idx] : qs.questions;
     }
-
-
-    // function _setScore(score) {
-    //
-    //     qs.score = score;
-    //
-    //     return true;
-    // }
-    //
-    //
-    // function _getScore(){
-    //
-    //     for(var i=0; i<qs.questions.length; i++) {
-    //         (qs.currentAnswers[i] === -1) && (qs.currentAnswers[i] = 0);
-    //         $log.info('qs.currentAnswers', qs.currentAnswers);
-    //         (qs.questions[i].correctAnswer === qs.currentAnswers[i]) && qs.score++;
-    //     }
-    //     return qs.score;
-    // }
 }

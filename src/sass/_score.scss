@@ -6,4 +6,12 @@
     font-weight: 400;
     text-shadow: 0px 0px 10px #ffe702;
     background: rgba(255, 255, 255, 0.4);
+    cursor: default;
+
+    .disable-select {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
 }
