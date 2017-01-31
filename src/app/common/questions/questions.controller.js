@@ -1,4 +1,4 @@
-function QuestionsController($state, QuestionsService, ScoreService, AppStateService, hlg, $log) {
+function QuestionsController($state, QuestionsService, ScoreService, $uibModal, $document, hlg, $log) {
 
     var ctrl = this,
         currentIndex = -1,
@@ -34,7 +34,10 @@ function QuestionsController($state, QuestionsService, ScoreService, AppStateSer
                             }
                         }
                         if (!answered) {
-                            window.alert('you did not answer to some questions');
+                            $uibModal.open({
+                                template:'<warning message="you did not answer to some questions" close="$close()"></warning>'
+                            });
+                            // window.alert('you did not answer to some questions');
                         } else {
                             ScoreService.setScore();
                             $state.go('score');

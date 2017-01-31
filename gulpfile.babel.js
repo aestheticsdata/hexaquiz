@@ -31,7 +31,8 @@ const paths = {
         'angular-ui-router/release/angular-ui-router.js',
         'firebase/firebase.js',
         'angularfire/dist/angularfire.js',
-        'ramda/dist/ramda.js'
+        'ramda/dist/ramda.js',
+        // 'angular-ui-bootstrap/dist/*.js'
         //'angular-loading-bar/build/loading-bar.min.js'
     ],
     static: [
