@@ -7,7 +7,7 @@ function QuestionsController($state, QuestionsService, ScoreService, $uibModal, 
     ctrl.$onInit = function () {
 
         hlg.l('red', 6, 'QuestionsController', '');
-        console.log('this.questions : ', ctrl.questions);
+        $log.debug('this.questions : ', ctrl.questions);
 
         ScoreService.init();
 
@@ -35,9 +35,8 @@ function QuestionsController($state, QuestionsService, ScoreService, $uibModal, 
                         }
                         if (!answered) {
                             $uibModal.open({
-                                template:'<warning message="you did not answer to some questions" close="$close()"></warning>'
+                                template:'<warning message="All questions must be answered" close="$close()"></warning>'
                             });
-                            // window.alert('you did not answer to some questions');
                         } else {
                             ScoreService.setScore();
                             $state.go('score');

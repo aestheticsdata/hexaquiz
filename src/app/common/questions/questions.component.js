@@ -19,18 +19,18 @@ angular
                 resolve: {
                     transitionAlias: '$transition$', // see https://github.com/angular-ui/ui-router/issues/3110
                     /*questions: function (QuestionsService) {
-                        console.log('resolve questions');
+                        $log.debug('resolve questions');
                         return QuestionsService.retrieveQuestions()
                             .then(
                                 function onSuccess(res) {
-                                    console.log(res);
+                                    $log.debug(res);
                                     QuestionsService.setQuestions(res);
                                     return QuestionsService.questions;
                                 }
                             )
                             .catch(
                                 function onError(err) {
-                                    console.log('error while retrieving questions : ', err);
+                                    $log.debug('error while retrieving questions : ', err);
                                 }
                             )
                     }*/

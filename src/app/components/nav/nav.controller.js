@@ -1,13 +1,13 @@
-function QuestionsNavController() {
+function QuestionsNavController($log) {
 
     var ctrl = this;
 
     ctrl.$onInit = function () {
 
-        console.log('QuestionsNavController');
+        $log.debug('QuestionsNavController');
 
         ctrl.prev = function () {
-            console.log('previous btn');
+            $log.debug('previous btn');
             ctrl.onNavClick({
                 $event:{
                     dir:'prev'

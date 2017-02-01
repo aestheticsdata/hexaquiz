@@ -4,15 +4,15 @@ function QuestionsListController($log, hlg) {
 
     ctrl.$onInit = function () {
 
-        $log.info('QuestionsListController');
+        $log.debug('QuestionsListController');
 
         ctrl.entries = ctrl.question.current;
 
-        $log.info('questions list ctrl : ', ctrl.question);
+        $log.debug('questions list ctrl : ', ctrl.question);
         ctrl.checkedQuestion = ctrl.question.checkedQuestion();
 
         ctrl.radioHasChanged = function (idx) {
-            console.log('radio has changed : ', idx);
+            $log.debug('radio has changed : ', idx);
             ctrl.onRadioChanged({
                 $event: {
                     idx: idx

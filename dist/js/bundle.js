@@ -2,14 +2,23 @@
 'use strict';
 'use strict';
 
-angular.module('hexaquiz', ['ui.bootstrap', 'hexaquiz.common', 'hexaquiz.components', 'hexaquiz.templates']);})(window.angular);
+angular.module('hexaquiz', ['ui.bootstrap',
+// 'cgBusy', // angular-busy spinner / https://github.com/cgross/angular-busy
+'angular-loading-bar', 'ngAnimate', // optional for angular-loading-bar
+'hexaquiz.common', 'hexaquiz.components', 'hexaquiz.templates']).config(["$logProvider", "cfpLoadingBarProvider", function ($logProvider, cfpLoadingBarProvider) {
+    $logProvider.debugEnabled(true);
+    cfpLoadingBarProvider.latencyThreshold = 100; // default
+}]).run(["$transitions", "cfpLoadingBar", function ($transitions, cfpLoadingBar) {
+    $transitions.onStart({}, cfpLoadingBar.start);
+    $transitions.onSuccess({}, cfpLoadingBar.complete);
+}]);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
 
 angular.module('hexaquiz.common', ['ui.router', 'hexaquiz.common.questions', 'hexaquiz.common.score']).run(["$state", "$uiRouter", function ($state, $uiRouter) {
-    var vis = window['ui-router-visualizer'];
-    vis.visualizer($uiRouter);
+    // var vis = window['ui-router-visualizer'];
+    // vis.visualizer($uiRouter);
 }]);})(window.angular);
 (function(angular){
 'use strict';
@@ -36,14 +45,14 @@ angular.module('hexaquiz.components.auth', ['ui.router', 'firebase']).config(["C
 }]).run(["$transitions", "$state", "AuthService", "AppStateService", "QuestionsService", "$log", "hlg", function ($transitions, $state, AuthService, AppStateService, QuestionsService, $log, hlg) {
     $transitions.onStart({
         to: function to(state) {
-            $log.info('%c $transitions state : ', 'background: green; color: white; display: block;', state);
-            $log.info('%c state.data : ', 'background: green; color: white; display: block;', state.data);
+            $log.debug('%c $transitions state : ', 'background: green; color: white; display: block;', state);
+            $log.debug('%c state.data : ', 'background: green; color: white; display: block;', state.data);
             return !!(state.data && state.data.requiredAuth);
         }
     }, function () {
-        console.log('777');
+        $log.debug('777');
         return AuthService.requireAuthentication().catch(function () {
-            console.log('auth catched');
+            $log.debug('auth catched');
             // return $state.target('auth.login');
             return $state.target('login');
         });
@@ -52,7 +61,7 @@ angular.module('hexaquiz.components.auth', ['ui.router', 'firebase']).config(["C
         // to: 'auth.*'
         to: 'login'
     }, function () {
-        console.log('888');
+        $log.debug('888');
         if (AuthService.isAuthenticated()) {
             return $state.target('app');
         }
@@ -208,7 +217,7 @@ function RootController($log) {
         };
 
         ctrl.displayUserName = function (e) {
-            console.log('!!!!! username : ', e);
+            $log.debug('!!!!! username : ', e);
             ctrl.userName = e.user.email.substr(0, e.user.email.indexOf('@'));
         };
     };
@@ -246,16 +255,16 @@ angular.module('hexaquiz.common').component('app', app).config(["$stateProvider"
         redirectTo: 'questions',
         url: '/app',
         resolve: {
-            questions: ["QuestionsService", "hlg", function questions(QuestionsService, hlg) {
+            questions: ["QuestionsService", "$log", "hlg", function questions(QuestionsService, $log, hlg) {
                 hlg.l('red', 10, 'resolve questions');
                 hlg.l('green', 2, 'resolve questions', QuestionsService.questions);
                 if (QuestionsService.questions.length === 0) {
                     return QuestionsService.retrieveQuestions().then(function onSuccess(res) {
-                        console.log(res);
+                        $log.debug(res);
                         QuestionsService.setQuestions(res);
                         return QuestionsService.questions;
                     }).catch(function onError(err) {
-                        console.log('error while retrieving questions : ', err);
+                        $log.debug('error while retrieving questions : ', err);
                     });
                 } else {
                     return QuestionsService.questions;
@@ -273,11 +282,12 @@ angular.module('hexaquiz.common').component('app', app).config(["$stateProvider"
 'use strict';
 'use strict';
 
-function AppController() {
+AppController.$inject = ["$log"];
+function AppController($log) {
     var ctrl = this;
 
     ctrl.$onInit = function () {
-        console.log('AppController');
+        $log.debug('AppController');
     };
 }
 
@@ -306,18 +316,18 @@ function HeaderBarController(AuthService, $state, $log) {
     var ctrl = this;
 
     ctrl.$onInit = function () {
-        console.log('HeaderBarController');
-        console.log('%c ctrl.loggedIn', 'background:teal; color:aqua; display:block', ctrl.loggedIn);
+        $log.debug('HeaderBarController');
+        $log.debug('%c ctrl.loggedIn', 'background:teal; color:aqua; display:block', ctrl.loggedIn);
     };
 
     ctrl.$onChanges = function (changes) {
-        $log.info('headerbar on change');
-        $log.info(changes.loggedIn);
+        $log.debug('headerbar on change');
+        $log.debug(changes.loggedIn);
         // ctrl.headerBarLoggedIn = (angular.copy(changes.loggedIn)).currentValue;
     };
 
     ctrl.logout = function () {
-        console.log('log out from header bar');
+        $log.debug('log out from header bar');
         AuthService.logout().then(function () {
             ctrl.onToggleLoggedOutBtn({
                 $event: {
@@ -367,7 +377,7 @@ function QuestionsController($state, QuestionsService, ScoreService, $uibModal, 
     ctrl.$onInit = function () {
 
         hlg.l('red', 6, 'QuestionsController', '');
-        console.log('this.questions : ', ctrl.questions);
+        $log.debug('this.questions : ', ctrl.questions);
 
         ScoreService.init();
 
@@ -395,9 +405,8 @@ function QuestionsController($state, QuestionsService, ScoreService, $uibModal, 
                         }
                         if (!answered) {
                             $uibModal.open({
-                                template: '<warning message="you did not answer to some questions" close="$close()"></warning>'
+                                template: '<warning message="All questions must be answered" close="$close()"></warning>'
                             });
-                            // window.alert('you did not answer to some questions');
                         } else {
                             ScoreService.setScore();
                             $state.go('score');
@@ -470,7 +479,7 @@ function QuestionsService($http, $firebaseObject, $log) {
 
     function _setQuestions(data) {
 
-        $log.info('QuestionsService::setQuestions : ', data.questions);
+        $log.debug('QuestionsService::setQuestions : ', data.questions);
 
         qs.questions = R.values(data.questions);
 
@@ -718,16 +727,17 @@ angular.module('hexaquiz.components.nav').component('nav', nav);})(window.angula
 'use strict';
 'use strict';
 
-function QuestionsNavController() {
+QuestionsNavController.$inject = ["$log"];
+function QuestionsNavController($log) {
 
     var ctrl = this;
 
     ctrl.$onInit = function () {
 
-        console.log('QuestionsNavController');
+        $log.debug('QuestionsNavController');
 
         ctrl.prev = function () {
-            console.log('previous btn');
+            $log.debug('previous btn');
             ctrl.onNavClick({
                 $event: {
                     dir: 'prev'
@@ -771,15 +781,15 @@ function QuestionsListController($log, hlg) {
 
     ctrl.$onInit = function () {
 
-        $log.info('QuestionsListController');
+        $log.debug('QuestionsListController');
 
         ctrl.entries = ctrl.question.current;
 
-        $log.info('questions list ctrl : ', ctrl.question);
+        $log.debug('questions list ctrl : ', ctrl.question);
         ctrl.checkedQuestion = ctrl.question.checkedQuestion();
 
         ctrl.radioHasChanged = function (idx) {
-            console.log('radio has changed : ', idx);
+            $log.debug('radio has changed : ', idx);
             ctrl.onRadioChanged({
                 $event: {
                     idx: idx
@@ -840,13 +850,14 @@ angular.module('hexaquiz.components.auth').component('authForm', authForm);})(wi
 'use strict';
 'use strict';
 
-function AuthFormController() {
+AuthFormController.$inject = ["$log"];
+function AuthFormController($log) {
 
     var ctrl = this;
 
     ctrl.$onInit = function () {
 
-        console.log('AuthFormController');
+        $log.debug('AuthFormController');
 
         ctrl.submitForm = function () {
             ctrl.onSubmit({
@@ -863,8 +874,8 @@ function AuthFormController() {
     };
 
     ctrl.$onChanges = function (changes) {
-        console.log('changes : ');
-        console.log(changes);
+        $log.debug('changes : ');
+        $log.debug(changes);
 
         if (changes.user) {
             ctrl.user = angular.copy(ctrl.user);
@@ -918,8 +929,8 @@ function LoginController(TextService, AuthService, $state, AppStateService, $log
     var ctrl = this;
 
     ctrl.$onInit = function () {
-        $log.info('LoginController');
-        $log.info('ctrl : ', ctrl);
+        $log.debug('LoginController');
+        $log.debug('ctrl : ', ctrl);
 
         ctrl.text = {
             signin: TextService.login.signin,
@@ -928,7 +939,7 @@ function LoginController(TextService, AuthService, $state, AppStateService, $log
 
         ctrl.loginUser = function (e) {
             return AuthService.login(e.user).then(function () {
-                console.log('login from login controller');
+                $log.debug('login from login controller');
                 ctrl.onToggleLoggedOutBtn({
                     $event: {
                         loggedIn: true
@@ -956,9 +967,9 @@ angular.module('hexaquiz.components.auth').controller('LoginController', LoginCo
 angular.module('hexaquiz.templates', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('./root.html', '<div class="root"><header-bar logged-in="$ctrl.loggedIn" user-name="{{$ctrl.userName}}" on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)"></header-bar><div ui-view on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)" on-user-name-available="$ctrl.displayUserName($event)"></div></div>');
   $templateCache.put('./app.html', '<div class="root"><div class="app"><div ui-view class="app"></div></div></div>');
+  $templateCache.put('./header-bar.html', '<div class="container-fluid"><div class="row"><div class="col-md-12 header"><header><div class="col-md-10 header-padding"><span class="app-title">hexaquiz</span> <button type="button" class="btn btn-default btn-sm ng-binding" ng-show="$ctrl.loggedIn" ng-click="$ctrl.logout()">log out</button></div><div class="col-md-2 username" ng-show="$ctrl.loggedIn">Welcome : {{$ctrl.userName}}</div></header></div></div></div>');
   $templateCache.put('./warning.html', '<div class="modal-header"><!--<h3 class="modal-title" id="modal-title">I\'m a modal!</h3>--></div><div class="modal-body" id="modal-body">{{$ctrl.message}}</div><div class="modal-footer"><button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Close</button></div>');
   $templateCache.put('./nav.html', '<div class="questions"><div class="container-fluid"><div class="row buttons-prev-next-hxf"><div class="col-xs-offset-3 col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.prev()" ng-disabled="$ctrl.isPrevDisabled">PREVIOUS</button></div><div class="col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.next()">NEXT</button></div></div></div></div>');
-  $templateCache.put('./header-bar.html', '<div class="container-fluid"><div class="row"><div class="col-md-12 header"><header><div class="col-md-10 header-padding"><span class="app-title">hexaquiz</span> <button type="button" class="btn btn-default btn-sm ng-binding" ng-show="$ctrl.loggedIn" ng-click="$ctrl.logout()">log out</button></div><div class="col-md-2 username" ng-show="$ctrl.loggedIn">Welcome : {{$ctrl.userName}}</div></header></div></div></div>');
   $templateCache.put('./questions.html', '<div class="questions"><nav questions="$ctrl.questions" is-prev-disabled="$ctrl.isPrevDisabled" on-nav-click="$ctrl.navTo($event)"></nav><questions-list question="$ctrl.questionsListQuestion" on-radio-changed="$ctrl.changeSelected($event)"></questions-list><questions-ribbon indexes="$ctrl.ribbonIndexes"></questions-ribbon></div>');
   $templateCache.put('./score.html', '<div class="score"><div class="container"><div class="row"><div class="col-xs-12"><div class="text-center disable-select">Your score : {{$ctrl.score}}</div></div></div></div></div>');
   $templateCache.put('./auth-form.html', '<div class="row"><div class="col-md-4 col-md-offset-4"><div class="panel panel-default"><div class="panel-heading panel-hxf-heading"><span class="glyphicon glyphicon-lock"></span> Login</div><div class="panel-body"><form class="form-horizontal" role="form" ng-submit="$ctrl.submitForm()"><div class="form-group"><label for="emailfield" class="col-sm-3 control-label">Email</label><div class="col-sm-9"><input type="email" name="email" class="form-control" id="emailfield" placeholder="Email" ng-model="$ctrl.user.email" ng-focus="$ctrl.onFocus($event)" required></div></div><div class="form-group"><label for="passfield" class="col-sm-3 control-label">Password</label><div class="col-sm-9"><input type="password" name="password" class="form-control" id="passfield" placeholder="Password" ng-model="$ctrl.user.password" ng-focus="$ctrl.onFocus($event)" required></div></div><div class="form-group last"><div class="col-sm-offset-3 col-sm-5"><button type="submit" class="btn btn-success btn-sm">{{ $ctrl.signButton }}</button> <button type="reset" class="btn btn-default btn-sm">{{ $ctrl.resetButton }}</button></div><div class="col-sm-4 wrong-hxf">{{ $ctrl.errorMessage }}</div></div></form></div><div class="panel-footer panel-hxf-footer"><div class="text-center"><span class="glyphicon glyphicon-info-sign"></span><a href="https://github.com/aestheticsdata/hexaquiz" target="_blank"> Github project page</a></div></div></div></div></div>');

@@ -1,8 +1,8 @@
-function AppController() {
+function AppController($log) {
     var ctrl = this;
 
     ctrl.$onInit = function () {
-        console.log('AppController');
+        $log.debug('AppController');
     }
 }
 

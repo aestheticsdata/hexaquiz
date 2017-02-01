@@ -12,7 +12,7 @@ function RootController($log) {
         };
 
         ctrl.displayUserName = function (e) {
-            console.log('!!!!! username : ', e);
+            $log.debug('!!!!! username : ', e);
             ctrl.userName = (e.user.email).substr(0,(e.user.email).indexOf('@'));
 
         }

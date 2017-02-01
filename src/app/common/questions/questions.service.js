@@ -33,7 +33,7 @@ function QuestionsService($http, $firebaseObject, $log) {
 
     function _setQuestions(data) {
 
-        $log.info('QuestionsService::setQuestions : ' , data.questions);
+        $log.debug('QuestionsService::setQuestions : ' , data.questions);
 
         qs.questions = R.values(data.questions);
 

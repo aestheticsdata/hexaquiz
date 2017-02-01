@@ -1,10 +1,10 @@
-function AuthFormController() {
+function AuthFormController($log) {
 
     var ctrl = this;
 
     ctrl.$onInit = function () {
 
-        console.log('AuthFormController');
+        $log.debug('AuthFormController');
 
         ctrl.submitForm = function () {
             ctrl.onSubmit({
@@ -22,8 +22,8 @@ function AuthFormController() {
     };
 
     ctrl.$onChanges = function (changes) {
-        console.log('changes : ');
-        console.log(changes);
+        $log.debug('changes : ');
+        $log.debug(changes);
 
         if (changes.user) {
             ctrl.user = angular.copy(ctrl.user);

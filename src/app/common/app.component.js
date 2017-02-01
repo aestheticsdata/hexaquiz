@@ -12,21 +12,21 @@ angular
                 redirectTo: 'questions',
                 url: '/app',
                 resolve : {
-                    questions: function (QuestionsService, hlg) {
+                    questions: function (QuestionsService, $log, hlg) {
                         hlg.l('red',10,'resolve questions');
                         hlg.l('green',2,'resolve questions', QuestionsService.questions);
                         if (QuestionsService.questions.length === 0) {
                             return QuestionsService.retrieveQuestions()
                                 .then(
                                     function onSuccess(res) {
-                                        console.log(res);
+                                        $log.debug(res);
                                         QuestionsService.setQuestions(res);
                                         return QuestionsService.questions;
                                     }
                                 )
                                 .catch(
                                     function onError(err) {
-                                        console.log('error while retrieving questions : ', err);
+                                        $log.debug('error while retrieving questions : ', err);
                                     }
                                 )
                         } else {

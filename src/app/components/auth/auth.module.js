@@ -10,16 +10,16 @@ angular
     .run(function ($transitions, $state, AuthService, AppStateService, QuestionsService, $log, hlg) {
         $transitions.onStart({
             to: function (state) {
-                $log.info('%c $transitions state : ', 'background: green; color: white; display: block;',state);
-                $log.info('%c state.data : ', 'background: green; color: white; display: block;',state.data);
+                $log.debug('%c $transitions state : ', 'background: green; color: white; display: block;',state);
+                $log.debug('%c state.data : ', 'background: green; color: white; display: block;',state.data);
                 return !!(state.data && state.data.requiredAuth);
             }
         }, function() {
-            console.log('777');
+            $log.debug('777');
             return AuthService
                 .requireAuthentication()
                 .catch(function () {
-                    console.log('auth catched');
+                    $log.debug('auth catched');
                     // return $state.target('auth.login');
                     return $state.target('login');
                 });
@@ -28,7 +28,7 @@ angular
             // to: 'auth.*'
             to: 'login'
         }, function () {
-            console.log('888');
+            $log.debug('888');
             if (AuthService.isAuthenticated()) {
                 return $state.target('app');
             }

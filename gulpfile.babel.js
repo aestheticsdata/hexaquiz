@@ -22,7 +22,10 @@ const srcpath = 'src/';
 const argv = yargs.argv;
 const paths = {
     dist: './dist/',
-    styles:    `${srcpath}/sass/*.scss`,
+    styles:    [`${srcpath}/sass/*.scss`,
+                // 'node_modules/angular-busy/dist/angular-busy.css',
+                'node_modules/angular-loading-bar/build/loading-bar.css'
+               ],
     bootstrap: 'node_modules/bootstrap/dist/**/*',
     scripts:   `${srcpath}/app/**/*.js`,
     templates: `${srcpath}/app/**/*.html`,
@@ -32,6 +35,9 @@ const paths = {
         'firebase/firebase.js',
         'angularfire/dist/angularfire.js',
         'ramda/dist/ramda.js',
+        'angular-animate/angular-animate.min.js',
+        'angular-loading-bar/build/loading-bar.min.js'
+        // 'angular-busy/dist/angular-busy.js'
         // 'angular-ui-bootstrap/dist/*.js'
         //'angular-loading-bar/build/loading-bar.min.js'
     ],
