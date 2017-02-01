@@ -13,6 +13,6 @@ angular
         cfpLoadingBarProvider.latencyThreshold = 100; // default
     })
     .run(function ($transitions, cfpLoadingBar) {
-        $transitions.onStart({}, cfpLoadingBar.start);
-        $transitions.onSuccess({}, cfpLoadingBar.complete);
+        // $transitions.onStart({}, cfpLoadingBar.start);
+        // $transitions.onSuccess({}, cfpLoadingBar.complete);
     });

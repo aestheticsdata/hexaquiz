@@ -1,4 +1,4 @@
-function AuthFormController($log) {
+function AuthFormController($log, cfpLoadingBar) {
 
     var ctrl = this;
 
@@ -7,6 +7,7 @@ function AuthFormController($log) {
         $log.debug('AuthFormController');
 
         ctrl.submitForm = function () {
+            cfpLoadingBar.start();
             ctrl.onSubmit({
                 $event: {
                     user: ctrl.user

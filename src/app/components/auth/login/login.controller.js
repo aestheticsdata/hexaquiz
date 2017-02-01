@@ -1,4 +1,4 @@
-function LoginController(TextService, AuthService, $state, AppStateService, $log) {
+function LoginController(TextService, AuthService, cfpLoadingBar, $state, AppStateService, $log) {
 
     var ctrl = this;
 
@@ -16,6 +16,7 @@ function LoginController(TextService, AuthService, $state, AppStateService, $log
                 .login(e.user)
                 .then(function () {
                     $log.debug('login from login controller');
+                    cfpLoadingBar.complete();
                     ctrl.onToggleLoggedOutBtn({
                         $event: {
                             loggedIn: true

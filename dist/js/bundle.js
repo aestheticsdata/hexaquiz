@@ -9,16 +9,8 @@ angular.module('hexaquiz', ['ui.bootstrap',
     $logProvider.debugEnabled(true);
     cfpLoadingBarProvider.latencyThreshold = 100; // default
 }]).run(["$transitions", "cfpLoadingBar", function ($transitions, cfpLoadingBar) {
-    $transitions.onStart({}, cfpLoadingBar.start);
-    $transitions.onSuccess({}, cfpLoadingBar.complete);
-}]);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-angular.module('hexaquiz.common', ['ui.router', 'hexaquiz.common.questions', 'hexaquiz.common.score']).run(["$state", "$uiRouter", function ($state, $uiRouter) {
-    // var vis = window['ui-router-visualizer'];
-    // vis.visualizer($uiRouter);
+    // $transitions.onStart({}, cfpLoadingBar.start);
+    // $transitions.onSuccess({}, cfpLoadingBar.complete);
 }]);})(window.angular);
 (function(angular){
 'use strict';
@@ -29,12 +21,10 @@ angular.module('hexaquiz.components', ['hexaquiz.components.auth', 'hexaquiz.com
 'use strict';
 'use strict';
 
-angular.module('hexaquiz.common.questions', ['ui.router']);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-angular.module('hexaquiz.common.score', ['ui.router']);})(window.angular);
+angular.module('hexaquiz.common', ['ui.router', 'hexaquiz.common.questions', 'hexaquiz.common.score']).run(["$state", "$uiRouter", function ($state, $uiRouter) {
+    // var vis = window['ui-router-visualizer'];
+    // vis.visualizer($uiRouter);
+}]);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -123,6 +113,16 @@ angular.module('hexaquiz.components.modal', []);})(window.angular);
 'use strict';
 
 angular.module('hexaquiz.components.nav', []);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+angular.module('hexaquiz.common.questions', ['ui.router']);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+angular.module('hexaquiz.common.score', ['ui.router']);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -292,6 +292,186 @@ function AppController($log) {
 }
 
 angular.module('hexaquiz.common').controller('AppController', AppController);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+// real auth data
+
+angular.module('hexaquiz.components.auth').factory('CONFIG', CONFIG);
+
+function CONFIG() {
+
+    var config = {
+        apiKey: "AIzaSyClQMBtHySSTr9Iw7zCHZhAFhNzXuXo434",
+        authDomain: "hexaquiz-6133e.firebaseapp.com",
+        databaseURL: "https://hexaquiz-6133e.firebaseio.com",
+        storageBucket: "hexaquiz-6133e.appspot.com",
+        messagingSenderId: "556453159537"
+    };
+
+    return config;
+}})(window.angular);
+(function(angular){
+'use strict';
+////////////////////////////////////////////////////////////
+// this file is the config service without real auth data //
+////////////////////////////////////////////////////////////
+
+// angular
+//     .module('hexaquiz.components.auth')
+//     .factory('CONFIG',CONFIG);
+//
+// function CONFIG() {
+//
+//     var config = {
+//         apiKey: "",
+//         authDomain: "",
+//         databaseURL: "",
+//         storageBucket: "",
+//         messagingSenderId: ""
+//     };
+//
+//     return config;
+// }
+"use strict";})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+AuthService.$inject = ["$firebaseAuth"];
+function AuthService($firebaseAuth) {
+
+    var auth = $firebaseAuth(),
+        authData = null;
+
+    function storeAuthData(response) {
+        authData = response;
+        return authData;
+    }
+
+    function onSignIn(user) {
+        authData = user;
+        return auth.$requireSignIn();
+    }
+
+    function clearAuthData() {
+        authData = null;
+    }
+
+    this.login = function (user) {
+        return auth.$signInWithEmailAndPassword(user.email, user.password).then(storeAuthData);
+    };
+
+    this.register = function (user) {
+        return auth.$createUserWithEmailAndPassword(user.email, user.password).then(storeAuthData);
+    };
+
+    this.logout = function () {
+        return auth.$signOut().then(clearAuthData);
+    };
+
+    this.requireAuthentication = function () {
+        return auth.$waitForSignIn().then(onSignIn);
+    };
+
+    this.isAuthenticated = function () {
+        return !!authData;
+    };
+
+    this.getAuth = function () {
+        return auth.$getAuth();
+    };
+
+    this.getUser = function () {
+        if (authData) {
+            return authData;
+        }
+    };
+}
+
+angular.module('hexaquiz.components.auth').service('AuthService', AuthService);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+var warning = {
+    templateUrl: './warning.html',
+    bindings: {
+        message: '@',
+        close: '&',
+        dismiss: '&'
+    },
+    controller: 'WarningModalController'
+};
+
+angular.module('hexaquiz.components.modal').component('warning', warning);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+WarningModalController.$inject = ["$log", "hlg"];
+function WarningModalController($log, hlg) {
+    var ctrl = this;
+
+    ctrl.$onInit = function () {
+        $log.debug('WarningModalController');
+
+        ctrl.ok = function () {
+            ctrl.close();
+        };
+    };
+}
+
+angular.module('hexaquiz.components.modal').controller('WarningModalController', WarningModalController);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+var nav = {
+    bindings: {
+        questions: '<',
+        isPrevDisabled: '<',
+        onNavClick: '&'
+    },
+    templateUrl: './nav.html',
+    controller: 'QuestionsNavController'
+};
+
+angular.module('hexaquiz.components.nav').component('nav', nav);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+QuestionsNavController.$inject = ["$log"];
+function QuestionsNavController($log) {
+
+    var ctrl = this;
+
+    ctrl.$onInit = function () {
+
+        $log.debug('QuestionsNavController');
+
+        ctrl.prev = function () {
+            $log.debug('previous btn');
+            ctrl.onNavClick({
+                $event: {
+                    dir: 'prev'
+                }
+            });
+        };
+
+        ctrl.next = function () {
+            ctrl.onNavClick({
+                $event: {
+                    dir: 'next'
+                }
+            });
+        };
+    };
+}
+
+angular.module('hexaquiz.components.nav').controller('QuestionsNavController', QuestionsNavController);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -580,182 +760,135 @@ angular.module('hexaquiz.common.score').factory('ScoreService', ScoreService);})
 'use strict';
 'use strict';
 
-// real auth data
+var authForm = {
+    bindings: {
+        user: '<',
+        errorMessage: '@',
+        signButton: '@',
+        resetButton: '@',
+        onSubmit: '&'
+    },
+    templateUrl: './auth-form.html',
+    controller: 'AuthFormController'
+};
 
-angular.module('hexaquiz.components.auth').factory('CONFIG', CONFIG);
-
-function CONFIG() {
-
-    var config = {
-        apiKey: "AIzaSyClQMBtHySSTr9Iw7zCHZhAFhNzXuXo434",
-        authDomain: "hexaquiz-6133e.firebaseapp.com",
-        databaseURL: "https://hexaquiz-6133e.firebaseio.com",
-        storageBucket: "hexaquiz-6133e.appspot.com",
-        messagingSenderId: "556453159537"
-    };
-
-    return config;
-}})(window.angular);
-(function(angular){
-'use strict';
-////////////////////////////////////////////////////////////
-// this file is the config service without real auth data //
-////////////////////////////////////////////////////////////
-
-// angular
-//     .module('hexaquiz.components.auth')
-//     .factory('CONFIG',CONFIG);
-//
-// function CONFIG() {
-//
-//     var config = {
-//         apiKey: "",
-//         authDomain: "",
-//         databaseURL: "",
-//         storageBucket: "",
-//         messagingSenderId: ""
-//     };
-//
-//     return config;
-// }
-"use strict";})(window.angular);
+angular.module('hexaquiz.components.auth').component('authForm', authForm);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
 
-AuthService.$inject = ["$firebaseAuth"];
-function AuthService($firebaseAuth) {
+AuthFormController.$inject = ["$log", "cfpLoadingBar"];
+function AuthFormController($log, cfpLoadingBar) {
 
-    var auth = $firebaseAuth(),
-        authData = null;
+    var ctrl = this;
 
-    function storeAuthData(response) {
-        authData = response;
-        return authData;
-    }
+    ctrl.$onInit = function () {
 
-    function onSignIn(user) {
-        authData = user;
-        return auth.$requireSignIn();
-    }
+        $log.debug('AuthFormController');
 
-    function clearAuthData() {
-        authData = null;
-    }
+        ctrl.submitForm = function () {
+            cfpLoadingBar.start();
+            ctrl.onSubmit({
+                $event: {
+                    user: ctrl.user
+                }
+            });
+        };
 
-    this.login = function (user) {
-        return auth.$signInWithEmailAndPassword(user.email, user.password).then(storeAuthData);
+        ctrl.onFocus = function (evt) {
+            ctrl.errorMessage = '';
+            evt.target.value = '';
+        };
     };
 
-    this.register = function (user) {
-        return auth.$createUserWithEmailAndPassword(user.email, user.password).then(storeAuthData);
-    };
+    ctrl.$onChanges = function (changes) {
+        $log.debug('changes : ');
+        $log.debug(changes);
 
-    this.logout = function () {
-        return auth.$signOut().then(clearAuthData);
-    };
-
-    this.requireAuthentication = function () {
-        return auth.$waitForSignIn().then(onSignIn);
-    };
-
-    this.isAuthenticated = function () {
-        return !!authData;
-    };
-
-    this.getAuth = function () {
-        return auth.$getAuth();
-    };
-
-    this.getUser = function () {
-        if (authData) {
-            return authData;
+        if (changes.user) {
+            ctrl.user = angular.copy(ctrl.user);
         }
     };
 }
 
-angular.module('hexaquiz.components.auth').service('AuthService', AuthService);})(window.angular);
+angular.module('hexaquiz.components.auth').controller('AuthFormController', AuthFormController);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
 
-var warning = {
-    templateUrl: './warning.html',
+var login = {
+    templateUrl: './login.html',
+    controller: 'LoginController',
+    textservice: '<',
     bindings: {
-        message: '@',
-        close: '&',
-        dismiss: '&'
-    },
-    controller: 'WarningModalController'
+        onToggleLoggedOutBtn: '&',
+        onUserNameAvailable: '&'
+    }
 };
 
-angular.module('hexaquiz.components.modal').component('warning', warning);})(window.angular);
+angular.module('hexaquiz.components.auth').component('login', login).config(["$stateProvider", "$urlServiceProvider", function ($stateProvider, $urlServiceProvider) {
+    $stateProvider.state('auth', {
+        redirectTo: 'auth.login',
+        url: '/auth'
+    })
+
+    // https://github.com/angular-ui/ui-router/issues/3277
+
+    // .state('auth.login', {
+    //     url: '/login',
+    //     component: 'login'
+    // });
+    .state('login', {
+        url: '/login',
+        component: 'login'
+    });
+
+    // https://github.com/angular-ui/ui-router/issues/3277
+    // $urlServiceProvider.rules.otherwise('/auth/login'); // entry point of the app
+    $urlServiceProvider.rules.otherwise('/login'); // entry point of the app
+}]);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
 
-WarningModalController.$inject = ["$log", "hlg"];
-function WarningModalController($log, hlg) {
-    var ctrl = this;
-
-    ctrl.$onInit = function () {
-        $log.debug('WarningModalController');
-
-        ctrl.ok = function () {
-            ctrl.close();
-        };
-    };
-}
-
-angular.module('hexaquiz.components.modal').controller('WarningModalController', WarningModalController);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-var nav = {
-    bindings: {
-        questions: '<',
-        isPrevDisabled: '<',
-        onNavClick: '&'
-    },
-    templateUrl: './nav.html',
-    controller: 'QuestionsNavController'
-};
-
-angular.module('hexaquiz.components.nav').component('nav', nav);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-QuestionsNavController.$inject = ["$log"];
-function QuestionsNavController($log) {
+LoginController.$inject = ["TextService", "AuthService", "cfpLoadingBar", "$state", "AppStateService", "$log"];
+function LoginController(TextService, AuthService, cfpLoadingBar, $state, AppStateService, $log) {
 
     var ctrl = this;
 
     ctrl.$onInit = function () {
+        $log.debug('LoginController');
+        $log.debug('ctrl : ', ctrl);
 
-        $log.debug('QuestionsNavController');
-
-        ctrl.prev = function () {
-            $log.debug('previous btn');
-            ctrl.onNavClick({
-                $event: {
-                    dir: 'prev'
-                }
-            });
+        ctrl.text = {
+            signin: TextService.login.signin,
+            reset: TextService.login.reset
         };
 
-        ctrl.next = function () {
-            ctrl.onNavClick({
-                $event: {
-                    dir: 'next'
-                }
+        ctrl.loginUser = function (e) {
+            return AuthService.login(e.user).then(function () {
+                $log.debug('login from login controller');
+                cfpLoadingBar.complete();
+                ctrl.onToggleLoggedOutBtn({
+                    $event: {
+                        loggedIn: true
+                    }
+                });
+                ctrl.onUserNameAvailable({
+                    $event: {
+                        user: AuthService.getUser()
+                    }
+                });
+                AppStateService.comingFromLogin = true;
+                $state.go('app');
+            }, function (reason) {
+                ctrl.errorMessage = reason.message;
             });
         };
     };
 }
 
-angular.module('hexaquiz.components.nav').controller('QuestionsNavController', QuestionsNavController);})(window.angular);
+angular.module('hexaquiz.components.auth').controller('LoginController', LoginController);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -833,147 +966,16 @@ angular.module('hexaquiz.common.questions').controller('QuestionsRibbonControlle
 'use strict';
 'use strict';
 
-var authForm = {
-    bindings: {
-        user: '<',
-        errorMessage: '@',
-        signButton: '@',
-        resetButton: '@',
-        onSubmit: '&'
-    },
-    templateUrl: './auth-form.html',
-    controller: 'AuthFormController'
-};
-
-angular.module('hexaquiz.components.auth').component('authForm', authForm);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-AuthFormController.$inject = ["$log"];
-function AuthFormController($log) {
-
-    var ctrl = this;
-
-    ctrl.$onInit = function () {
-
-        $log.debug('AuthFormController');
-
-        ctrl.submitForm = function () {
-            ctrl.onSubmit({
-                $event: {
-                    user: ctrl.user
-                }
-            });
-        };
-
-        ctrl.onFocus = function (evt) {
-            ctrl.errorMessage = '';
-            evt.target.value = '';
-        };
-    };
-
-    ctrl.$onChanges = function (changes) {
-        $log.debug('changes : ');
-        $log.debug(changes);
-
-        if (changes.user) {
-            ctrl.user = angular.copy(ctrl.user);
-        }
-    };
-}
-
-angular.module('hexaquiz.components.auth').controller('AuthFormController', AuthFormController);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-var login = {
-    templateUrl: './login.html',
-    controller: 'LoginController',
-    textservice: '<',
-    bindings: {
-        onToggleLoggedOutBtn: '&',
-        onUserNameAvailable: '&'
-    }
-};
-
-angular.module('hexaquiz.components.auth').component('login', login).config(["$stateProvider", "$urlServiceProvider", function ($stateProvider, $urlServiceProvider) {
-    $stateProvider.state('auth', {
-        redirectTo: 'auth.login',
-        url: '/auth'
-    })
-
-    // https://github.com/angular-ui/ui-router/issues/3277
-
-    // .state('auth.login', {
-    //     url: '/login',
-    //     component: 'login'
-    // });
-    .state('login', {
-        url: '/login',
-        component: 'login'
-    });
-
-    // https://github.com/angular-ui/ui-router/issues/3277
-    // $urlServiceProvider.rules.otherwise('/auth/login'); // entry point of the app
-    $urlServiceProvider.rules.otherwise('/login'); // entry point of the app
-}]);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-LoginController.$inject = ["TextService", "AuthService", "$state", "AppStateService", "$log"];
-function LoginController(TextService, AuthService, $state, AppStateService, $log) {
-
-    var ctrl = this;
-
-    ctrl.$onInit = function () {
-        $log.debug('LoginController');
-        $log.debug('ctrl : ', ctrl);
-
-        ctrl.text = {
-            signin: TextService.login.signin,
-            reset: TextService.login.reset
-        };
-
-        ctrl.loginUser = function (e) {
-            return AuthService.login(e.user).then(function () {
-                $log.debug('login from login controller');
-                ctrl.onToggleLoggedOutBtn({
-                    $event: {
-                        loggedIn: true
-                    }
-                });
-                ctrl.onUserNameAvailable({
-                    $event: {
-                        user: AuthService.getUser()
-                    }
-                });
-                AppStateService.comingFromLogin = true;
-                $state.go('app');
-            }, function (reason) {
-                ctrl.errorMessage = reason.message;
-            });
-        };
-    };
-}
-
-angular.module('hexaquiz.components.auth').controller('LoginController', LoginController);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
 angular.module('hexaquiz.templates', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('./root.html', '<div class="root"><header-bar logged-in="$ctrl.loggedIn" user-name="{{$ctrl.userName}}" on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)"></header-bar><div ui-view on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)" on-user-name-available="$ctrl.displayUserName($event)"></div></div>');
   $templateCache.put('./app.html', '<div class="root"><div class="app"><div ui-view class="app"></div></div></div>');
   $templateCache.put('./header-bar.html', '<div class="container-fluid"><div class="row"><div class="col-md-12 header"><header><div class="col-md-10 header-padding"><span class="app-title">hexaquiz</span> <button type="button" class="btn btn-default btn-sm ng-binding" ng-show="$ctrl.loggedIn" ng-click="$ctrl.logout()">log out</button></div><div class="col-md-2 username" ng-show="$ctrl.loggedIn">Welcome : {{$ctrl.userName}}</div></header></div></div></div>');
-  $templateCache.put('./warning.html', '<div class="modal-header"><!--<h3 class="modal-title" id="modal-title">I\'m a modal!</h3>--></div><div class="modal-body" id="modal-body">{{$ctrl.message}}</div><div class="modal-footer"><button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Close</button></div>');
-  $templateCache.put('./nav.html', '<div class="questions"><div class="container-fluid"><div class="row buttons-prev-next-hxf"><div class="col-xs-offset-3 col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.prev()" ng-disabled="$ctrl.isPrevDisabled">PREVIOUS</button></div><div class="col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.next()">NEXT</button></div></div></div></div>');
   $templateCache.put('./questions.html', '<div class="questions"><nav questions="$ctrl.questions" is-prev-disabled="$ctrl.isPrevDisabled" on-nav-click="$ctrl.navTo($event)"></nav><questions-list question="$ctrl.questionsListQuestion" on-radio-changed="$ctrl.changeSelected($event)"></questions-list><questions-ribbon indexes="$ctrl.ribbonIndexes"></questions-ribbon></div>');
   $templateCache.put('./score.html', '<div class="score"><div class="container"><div class="row"><div class="col-xs-12"><div class="text-center disable-select">Your score : {{$ctrl.score}}</div></div></div></div></div>');
-  $templateCache.put('./auth-form.html', '<div class="row"><div class="col-md-4 col-md-offset-4"><div class="panel panel-default"><div class="panel-heading panel-hxf-heading"><span class="glyphicon glyphicon-lock"></span> Login</div><div class="panel-body"><form class="form-horizontal" role="form" ng-submit="$ctrl.submitForm()"><div class="form-group"><label for="emailfield" class="col-sm-3 control-label">Email</label><div class="col-sm-9"><input type="email" name="email" class="form-control" id="emailfield" placeholder="Email" ng-model="$ctrl.user.email" ng-focus="$ctrl.onFocus($event)" required></div></div><div class="form-group"><label for="passfield" class="col-sm-3 control-label">Password</label><div class="col-sm-9"><input type="password" name="password" class="form-control" id="passfield" placeholder="Password" ng-model="$ctrl.user.password" ng-focus="$ctrl.onFocus($event)" required></div></div><div class="form-group last"><div class="col-sm-offset-3 col-sm-5"><button type="submit" class="btn btn-success btn-sm">{{ $ctrl.signButton }}</button> <button type="reset" class="btn btn-default btn-sm">{{ $ctrl.resetButton }}</button></div><div class="col-sm-4 wrong-hxf">{{ $ctrl.errorMessage }}</div></div></form></div><div class="panel-footer panel-hxf-footer"><div class="text-center"><span class="glyphicon glyphicon-info-sign"></span><a href="https://github.com/aestheticsdata/hexaquiz" target="_blank"> Github project page</a></div></div></div></div></div>');
-  $templateCache.put('./login.html', '<div class="login"><div class="container"><auth-form user="$ctrl.user" error-message="{{ $ctrl.errorMessage }}" sign-button="{{ $ctrl.text.signin }}" reset-button="{{ $ctrl.text.reset }}" on-submit="$ctrl.loginUser($event)"></auth-form><div class="row"><div class="col-md-12"><div class="text-center title-hxf">A quiz made with <span class="title-hxf-bold">AngularJS 1.5+</span> and <span class="title-hxf-bold">Firebase</span></div></div></div></div></div>');
+  $templateCache.put('./nav.html', '<div class="questions"><div class="container-fluid"><div class="row buttons-prev-next-hxf"><div class="col-xs-offset-3 col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.prev()" ng-disabled="$ctrl.isPrevDisabled">PREVIOUS</button></div><div class="col-xs-3"><button class="btn btn-primary btn-lg btn-block" ng-click="$ctrl.next()">NEXT</button></div></div></div></div>');
+  $templateCache.put('./warning.html', '<div class="modal-header"><!--<h3 class="modal-title" id="modal-title">I\'m a modal!</h3>--></div><div class="modal-body" id="modal-body">{{$ctrl.message}}</div><div class="modal-footer"><button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Close</button></div>');
   $templateCache.put('./questions-list.html', '<div class="row"><div class="col-md-offset-3 col-md-6"><div class="question panel panel-success"><div class="panel-heading text-center">{{$ctrl.entries.question}}</div><div class="panel-body"><div class="list-group list-group-hxf"><ul ng-repeat="entry in $ctrl.entries.choices" class="list-group-item choices"><input id="{{entry}}" type="radio" name="answerRadio" ng-checked="$index == $ctrl.checkedQuestion" ng-click="$ctrl.radioHasChanged($index)"><label for="{{entry}}"><span class="entry">{{entry}}</span></label></ul></div></div></div></div></div>');
   $templateCache.put('./questions-ribbon.html', '<div class="row"><div class="col-xs-12"><div class="text-center counter-hxf">{{$ctrl.currentQuestionIdx}}/{{$ctrl.totalQuestionIdx}}</div></div></div>');
+  $templateCache.put('./auth-form.html', '<div class="row"><div class="col-md-4 col-md-offset-4"><div class="panel panel-default"><div class="panel-heading panel-hxf-heading"><span class="glyphicon glyphicon-lock"></span> Login</div><div class="panel-body"><form class="form-horizontal" role="form" ng-submit="$ctrl.submitForm()"><div class="form-group"><label for="emailfield" class="col-sm-3 control-label">Email</label><div class="col-sm-9"><input type="email" name="email" class="form-control" id="emailfield" placeholder="Email" ng-model="$ctrl.user.email" ng-focus="$ctrl.onFocus($event)" required></div></div><div class="form-group"><label for="passfield" class="col-sm-3 control-label">Password</label><div class="col-sm-9"><input type="password" name="password" class="form-control" id="passfield" placeholder="Password" ng-model="$ctrl.user.password" ng-focus="$ctrl.onFocus($event)" required></div></div><div class="form-group last"><div class="col-sm-offset-3 col-sm-5"><button type="submit" class="btn btn-success btn-sm">{{ $ctrl.signButton }}</button> <button type="reset" class="btn btn-default btn-sm">{{ $ctrl.resetButton }}</button></div><div class="col-sm-4 wrong-hxf">{{ $ctrl.errorMessage }}</div></div></form></div><div class="panel-footer panel-hxf-footer"><div class="text-center"><span class="glyphicon glyphicon-info-sign"></span><a href="https://github.com/aestheticsdata/hexaquiz" target="_blank"> Github project page</a></div></div></div></div></div>');
+  $templateCache.put('./login.html', '<div class="login"><div class="container"><auth-form user="$ctrl.user" error-message="{{ $ctrl.errorMessage }}" sign-button="{{ $ctrl.text.signin }}" reset-button="{{ $ctrl.text.reset }}" on-submit="$ctrl.loginUser($event)"></auth-form><div class="row"><div class="col-md-12"><div class="text-center title-hxf">A quiz made with <span class="title-hxf-bold">AngularJS 1.5+</span> and <span class="title-hxf-bold">Firebase</span></div></div></div></div></div>');
 }]);})(window.angular);
