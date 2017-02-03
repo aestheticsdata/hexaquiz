@@ -7,6 +7,11 @@ function RootController($log) {
         ctrl.loggedIn = false;
         ctrl.userName = 'no name';
 
+        ctrl.showTimer = false;
+        ctrl.launchTimer = function (e) {
+            ctrl.showTimer = e.showTimer;
+        };
+
         ctrl.displayLogOutButton = function (e) {
             ctrl.loggedIn = e.loggedIn;
         };

@@ -6,9 +6,12 @@
             on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)">
     </header-bar>
 
+    <timer ng-show="$ctrl.showTimer" launch="$ctrl.showTimer"></timer>
+
     <div ui-view
          on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)"
-         on-user-name-available="$ctrl.displayUserName($event)">
+         on-user-name-available="$ctrl.displayUserName($event)"
+         on-launch-timer="$ctrl.launchTimer($event)">
     </div>
 
 </div>

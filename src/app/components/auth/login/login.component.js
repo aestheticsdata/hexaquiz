@@ -4,7 +4,8 @@ var login = {
     textservice:'<',
     bindings: {
         onToggleLoggedOutBtn: '&',
-        onUserNameAvailable: '&'
+        onUserNameAvailable: '&',
+        onLaunchTimer: '&'
     }
 };
 

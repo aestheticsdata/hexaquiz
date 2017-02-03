@@ -9,7 +9,14 @@ function TimerController($interval, $log, hlg) {
 
     ctrl.$onInit = function () {
         $log.debug('TimerController');
-        timer = $interval(_updateTimer, 1000);
+        // timer = $interval(_updateTimer, 1000);
+    };
+
+    ctrl.$onChanges = function (changes) {
+        $log.debug('changes in timer : ', changes);
+        if (changes.launch.currentValue) {
+            timer = $interval(_updateTimer, 1000);
+        }
     };
 
     function _updateTimer() {

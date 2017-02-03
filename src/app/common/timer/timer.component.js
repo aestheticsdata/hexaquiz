@@ -2,8 +2,9 @@ var timer = {
         templateUrl: './timer.html',
         controller: 'TimerController',
         bindings: {
-
+            launch: '<'
         }
+
 };
 
 angular

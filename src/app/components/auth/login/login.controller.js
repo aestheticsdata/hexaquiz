@@ -27,6 +27,11 @@ function LoginController(TextService, AuthService, cfpLoadingBar, $state, AppSta
                             user: AuthService.getUser()
                         }
                     });
+                    ctrl.onLaunchTimer({
+                        $event: {
+                            showTimer: true
+                        }
+                    });
                     AppStateService.comingFromLogin = true;
                     $state.go('app');
                 }, function (reason) {

@@ -17,8 +17,8 @@ angular.module('hexaquiz', ['ui.bootstrap',
 'use strict';
 
 angular.module('hexaquiz.common', ['ui.router', 'hexaquiz.common.questions', 'hexaquiz.common.score', 'hexaquiz.common.timer']).run(["$state", "$uiRouter", function ($state, $uiRouter) {
-    // var vis = window['ui-router-visualizer'];
-    // vis.visualizer($uiRouter);
+    var vis = window['ui-router-visualizer'];
+    vis.visualizer($uiRouter);
 }]);})(window.angular);
 (function(angular){
 'use strict';
@@ -40,16 +40,6 @@ angular.module('hexaquiz.common.score', ['ui.router']);})(window.angular);
 'use strict';
 
 angular.module('hexaquiz.common.timer', []);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-angular.module('hexaquiz.components.modal', []);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-angular.module('hexaquiz.components.nav', []);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -128,6 +118,16 @@ angular.module('hexaquiz.components.auth', ['ui.router', 'firebase']).config(["C
 
     /////////////////////////////////////////////////////////////
 }]);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+angular.module('hexaquiz.components.modal', []);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+angular.module('hexaquiz.components.nav', []);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -217,6 +217,11 @@ function RootController($log) {
         ctrl.loggedIn = false;
         ctrl.userName = 'no name';
 
+        ctrl.showTimer = false;
+        ctrl.launchTimer = function (e) {
+            ctrl.showTimer = e.showTimer;
+        };
+
         ctrl.displayLogOutButton = function (e) {
             ctrl.loggedIn = e.loggedIn;
         };
@@ -260,21 +265,27 @@ angular.module('hexaquiz.common').component('app', app).config(["$stateProvider"
         redirectTo: 'questions',
         url: '/app',
         resolve: {
-            questions: ["QuestionsService", "$log", "hlg", function questions(QuestionsService, $log, hlg) {
-                hlg.l('red', 10, 'resolve questions');
-                hlg.l('green', 2, 'resolve questions', QuestionsService.questions);
-                if (QuestionsService.questions.length === 0) {
-                    return QuestionsService.retrieveQuestions().then(function onSuccess(res) {
-                        $log.debug(res);
-                        QuestionsService.setQuestions(res);
-                        return QuestionsService.questions;
-                    }).catch(function onError(err) {
-                        $log.debug('error while retrieving questions : ', err);
-                    });
-                } else {
-                    return QuestionsService.questions;
-                }
-            }]
+            // questions: function (QuestionsService, $log, hlg) {
+            //     hlg.l('red',10,'resolve questions');
+            //     hlg.l('green',2,'resolve questions', QuestionsService.questions);
+            //     if (QuestionsService.questions.length === 0) {
+            //         return QuestionsService.retrieveQuestions()
+            //             .then(
+            //                 function onSuccess(res) {
+            //                     $log.debug(res);
+            //                     QuestionsService.setQuestions(res);
+            //                     return QuestionsService.questions;
+            //                 }
+            //             )
+            //             .catch(
+            //                 function onError(err) {
+            //                     $log.debug('error while retrieving questions : ', err);
+            //                 }
+            //             )
+            //     } else {
+            //         return QuestionsService.questions;
+            //     }
+            // }
         },
         data: {
             requiredAuth: true
@@ -287,12 +298,13 @@ angular.module('hexaquiz.common').component('app', app).config(["$stateProvider"
 'use strict';
 'use strict';
 
-AppController.$inject = ["$log"];
-function AppController($log) {
+AppController.$inject = ["$log", "hlg"];
+function AppController($log, hlg) {
     var ctrl = this;
 
     ctrl.$onInit = function () {
         $log.debug('AppController');
+        hlg.l('purple', 5, Date.now(), '');
     };
 }
 
@@ -365,7 +377,18 @@ angular.module('hexaquiz.common.questions').component('questions', questions).co
         url: '/questions/:idx',
         component: 'questions',
         resolve: {
-            transitionAlias: '$transition$' }
+            transitionAlias: '$transition$', // see https://github.com/angular-ui/ui-router/issues/3110
+            questions: ["QuestionsService", "$log", function questions(QuestionsService, $log) {
+                $log.debug('resolve questions');
+                return QuestionsService.retrieveQuestions().then(function onSuccess(res) {
+                    $log.debug(res);
+                    QuestionsService.setQuestions(res);
+                    return QuestionsService.questions;
+                }).catch(function onError(err) {
+                    $log.debug('error while retrieving questions : ', err);
+                });
+            }]
+        }
     });
 }]);})(window.angular);
 (function(angular){
@@ -586,9 +609,12 @@ angular.module('hexaquiz.common.score').factory('ScoreService', ScoreService);})
 'use strict';
 
 var timer = {
-        templateUrl: './timer.html',
-        controller: 'TimerController',
-        bindings: {}
+    templateUrl: './timer.html',
+    controller: 'TimerController',
+    bindings: {
+        launch: '<'
+    }
+
 };
 
 angular.module('hexaquiz.common.timer').component('timer', timer);})(window.angular);
@@ -609,7 +635,14 @@ function TimerController($interval, $log, hlg) {
 
     ctrl.$onInit = function () {
         $log.debug('TimerController');
-        timer = $interval(_updateTimer, 1000);
+        // timer = $interval(_updateTimer, 1000);
+    };
+
+    ctrl.$onChanges = function (changes) {
+        $log.debug('changes in timer : ', changes);
+        if (changes.launch.currentValue) {
+            timer = $interval(_updateTimer, 1000);
+        }
     };
 
     function _updateTimer() {
@@ -635,87 +668,6 @@ function TimerController($interval, $log, hlg) {
 }
 
 angular.module('hexaquiz.common.timer').controller('TimerController', TimerController);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-var warning = {
-    templateUrl: './warning.html',
-    bindings: {
-        message: '@',
-        close: '&',
-        dismiss: '&'
-    },
-    controller: 'WarningModalController'
-};
-
-angular.module('hexaquiz.components.modal').component('warning', warning);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-WarningModalController.$inject = ["$log", "hlg"];
-function WarningModalController($log, hlg) {
-    var ctrl = this;
-
-    ctrl.$onInit = function () {
-        $log.debug('WarningModalController');
-
-        ctrl.ok = function () {
-            ctrl.close();
-        };
-    };
-}
-
-angular.module('hexaquiz.components.modal').controller('WarningModalController', WarningModalController);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-var nav = {
-    bindings: {
-        questions: '<',
-        isPrevDisabled: '<',
-        onNavClick: '&'
-    },
-    templateUrl: './nav.html',
-    controller: 'QuestionsNavController'
-};
-
-angular.module('hexaquiz.components.nav').component('nav', nav);})(window.angular);
-(function(angular){
-'use strict';
-'use strict';
-
-QuestionsNavController.$inject = ["$log"];
-function QuestionsNavController($log) {
-
-    var ctrl = this;
-
-    ctrl.$onInit = function () {
-
-        $log.debug('QuestionsNavController');
-
-        ctrl.prev = function () {
-            $log.debug('previous btn');
-            ctrl.onNavClick({
-                $event: {
-                    dir: 'prev'
-                }
-            });
-        };
-
-        ctrl.next = function () {
-            ctrl.onNavClick({
-                $event: {
-                    dir: 'next'
-                }
-            });
-        };
-    };
-}
-
-angular.module('hexaquiz.components.nav').controller('QuestionsNavController', QuestionsNavController);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -815,6 +767,87 @@ function AuthService($firebaseAuth) {
 }
 
 angular.module('hexaquiz.components.auth').service('AuthService', AuthService);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+var warning = {
+    templateUrl: './warning.html',
+    bindings: {
+        message: '@',
+        close: '&',
+        dismiss: '&'
+    },
+    controller: 'WarningModalController'
+};
+
+angular.module('hexaquiz.components.modal').component('warning', warning);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+WarningModalController.$inject = ["$log", "hlg"];
+function WarningModalController($log, hlg) {
+    var ctrl = this;
+
+    ctrl.$onInit = function () {
+        $log.debug('WarningModalController');
+
+        ctrl.ok = function () {
+            ctrl.close();
+        };
+    };
+}
+
+angular.module('hexaquiz.components.modal').controller('WarningModalController', WarningModalController);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+var nav = {
+    bindings: {
+        questions: '<',
+        isPrevDisabled: '<',
+        onNavClick: '&'
+    },
+    templateUrl: './nav.html',
+    controller: 'QuestionsNavController'
+};
+
+angular.module('hexaquiz.components.nav').component('nav', nav);})(window.angular);
+(function(angular){
+'use strict';
+'use strict';
+
+QuestionsNavController.$inject = ["$log"];
+function QuestionsNavController($log) {
+
+    var ctrl = this;
+
+    ctrl.$onInit = function () {
+
+        $log.debug('QuestionsNavController');
+
+        ctrl.prev = function () {
+            $log.debug('previous btn');
+            ctrl.onNavClick({
+                $event: {
+                    dir: 'prev'
+                }
+            });
+        };
+
+        ctrl.next = function () {
+            ctrl.onNavClick({
+                $event: {
+                    dir: 'next'
+                }
+            });
+        };
+    };
+}
+
+angular.module('hexaquiz.components.nav').controller('QuestionsNavController', QuestionsNavController);})(window.angular);
 (function(angular){
 'use strict';
 'use strict';
@@ -954,7 +987,8 @@ var login = {
     textservice: '<',
     bindings: {
         onToggleLoggedOutBtn: '&',
-        onUserNameAvailable: '&'
+        onUserNameAvailable: '&',
+        onLaunchTimer: '&'
     }
 };
 
@@ -1011,6 +1045,11 @@ function LoginController(TextService, AuthService, cfpLoadingBar, $state, AppSta
                         user: AuthService.getUser()
                     }
                 });
+                ctrl.onLaunchTimer({
+                    $event: {
+                        showTimer: true
+                    }
+                });
                 AppStateService.comingFromLogin = true;
                 $state.go('app');
             }, function (reason) {
@@ -1026,10 +1065,10 @@ angular.module('hexaquiz.components.auth').controller('LoginController', LoginCo
 'use strict';
 
 angular.module('hexaquiz.templates', []).run(['$templateCache', function ($templateCache) {
-  $templateCache.put('./root.html', '<div class="root"><header-bar logged-in="$ctrl.loggedIn" user-name="{{$ctrl.userName}}" on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)"></header-bar><div ui-view on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)" on-user-name-available="$ctrl.displayUserName($event)"></div></div>');
+  $templateCache.put('./root.html', '<div class="root"><header-bar logged-in="$ctrl.loggedIn" user-name="{{$ctrl.userName}}" on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)"></header-bar><timer ng-show="$ctrl.showTimer" launch="$ctrl.showTimer"></timer><div ui-view on-toggle-logged-out-btn="$ctrl.displayLogOutButton($event)" on-user-name-available="$ctrl.displayUserName($event)" on-launch-timer="$ctrl.launchTimer($event)"></div></div>');
   $templateCache.put('./app.html', '<div class="root"><div class="app"><div ui-view class="app"></div></div></div>');
-  $templateCache.put('./questions.html', '<div class="questions"><nav questions="$ctrl.questions" is-prev-disabled="$ctrl.isPrevDisabled" on-nav-click="$ctrl.navTo($event)"></nav><questions-list question="$ctrl.questionsListQuestion" on-radio-changed="$ctrl.changeSelected($event)"></questions-list><questions-ribbon indexes="$ctrl.ribbonIndexes"></questions-ribbon></div>');
   $templateCache.put('./header-bar.html', '<div class="container-fluid"><div class="row"><div class="col-md-12 header"><header><div class="col-md-10 header-padding"><span class="app-title">hexaquiz</span> <button type="button" class="btn btn-default btn-sm ng-binding" ng-show="$ctrl.loggedIn" ng-click="$ctrl.logout()">log out</button></div><div class="col-md-2 username" ng-show="$ctrl.loggedIn">Welcome : {{$ctrl.userName}}</div></header></div></div></div>');
+  $templateCache.put('./questions.html', '<div class="questions"><nav questions="$ctrl.questions" is-prev-disabled="$ctrl.isPrevDisabled" on-nav-click="$ctrl.navTo($event)"></nav><questions-list question="$ctrl.questionsListQuestion" on-radio-changed="$ctrl.changeSelected($event)"></questions-list><questions-ribbon indexes="$ctrl.ribbonIndexes"></questions-ribbon></div>');
   $templateCache.put('./score.html', '<div class="score"><div class="container"><div class="row"><div class="col-xs-12"><div class="text-center disable-select">Your score : {{$ctrl.score}}</div></div></div></div></div>');
   $templateCache.put('./timer.html', '<div>{{$ctrl.min}}:{{$ctrl.sec}}</div>');
   $templateCache.put('./warning.html', '<div class="modal-header"><!--<h3 class="modal-title" id="modal-title">I\'m a modal!</h3>--></div><div class="modal-body" id="modal-body">{{$ctrl.message}}</div><div class="modal-footer"><button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Close</button></div>');
