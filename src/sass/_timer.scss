@@ -1,3 +1,19 @@
 .timer {
 
+  background: blue;
+  font-weight: 500;
+
+  .container {
+    width: 120px;
+    height:120px;
+  }
+
+  .counter {
+    background: #f9f9f9;
+    color: #000000;
+  }
+  .caption {
+    background: #767676;
+    color: #000000;
+  }
 }
