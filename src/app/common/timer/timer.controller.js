@@ -13,6 +13,11 @@ function TimerController($interval, $log, hlg, TimerService) {
         ctrlTimer = $interval(updateTimerFromService, 400);
     };
 
+    ctrl.$onDestroy = function () {
+        $log.debug('TimerController on destroy');
+        $interval.cancel(ctrlTimer);
+    };
+
     function updateTimerFromService() {
         ctrl.min = TimerService.displayTime().min;
         ctrl.sec = TimerService.displayTime().sec;

@@ -1,6 +1,6 @@
 function TimerService($interval, $window, $log, hlg) {
     var timerservice = {
-        count   : 5, // number of seconds
+        count   : 15, // number of seconds
         tempMin : 0,
         tempSec : 0,
         timer   : null,

@@ -4,3 +4,5 @@ node_modules/*
 css/*
 build/*
 src/app/components/auth/auth.service-config.js
+/dist/js/bundle.js
+/dist/css
