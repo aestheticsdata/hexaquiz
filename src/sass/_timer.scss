@@ -31,7 +31,7 @@
   }
 
 
-  #SPAN_5 {
+  .time__display {
     color: rgb(38, 38, 45);
     text-align: center;
     text-size-adjust: 100%;
@@ -41,15 +41,6 @@
     outline: rgb(38, 38, 45) none 0px;
   }/*#SPAN_5*/
 
-  #SPAN_6 {
-    color: rgb(170, 172, 181);
-    text-align: center;
-    text-size-adjust: 100%;
-    column-rule-color: rgb(170, 172, 181);
-    border: 0px none rgb(170, 172, 181);
-    font: normal normal bold normal 34px / 54.4px Roboto, Arial, sans-serif;
-    outline: rgb(170, 172, 181) none 0px;
-  }/*#SPAN_6*/
 
   .caption {
     background-image: -webkit-linear-gradient(top,#dff0d8 0,#c6d5e9 100%);
@@ -80,7 +71,7 @@
   }
 
 
-  #SPAN_8 {
+  .caption__text {
     color: rgb(62, 56, 38);
     display: block;
     height: 19px;
