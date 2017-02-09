@@ -1,6 +1,6 @@
 function TimerService($interval, $window, $log, hlg) {
     var timerservice = {
-        count   : 15, // number of seconds
+        count   : 72, // number of seconds
         tempMin : 0,
         tempSec : 0,
         timer   : null,
@@ -30,7 +30,7 @@ function TimerService($interval, $window, $log, hlg) {
 
         if (timerservice.tempMin < 0 && timerservice.tempSec < 0) {
             if($interval.cancel(timerservice.timer)) {
-                $window.alert('time elapsed');
+                // $window.alert('time elapsed');
             }
             timerservice.tempMin = '0';
             timerservice.tempSec = '0';

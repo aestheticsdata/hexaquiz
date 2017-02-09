@@ -12,7 +12,7 @@ var login = {
 angular
     .module('hexaquiz.components.auth')
     .component('login', login)
-    .config(function ($stateProvider, $urlServiceProvider) {
+    .config(function ($stateProvider, $urlServiceProvider, TimerServiceProvider) {
         $stateProvider
             .state('auth', {
                 redirectTo: 'auth.login',
@@ -28,10 +28,12 @@ angular
             // });
             .state('login', {
                 url: '/login',
-                component: 'login'
+                component: 'login',
             });
 
             // https://github.com/angular-ui/ui-router/issues/3277
         // $urlServiceProvider.rules.otherwise('/auth/login'); // entry point of the app
         $urlServiceProvider.rules.otherwise('/login'); // entry point of the app
+
+        // TimerServiceProvider.count = 75;
     });

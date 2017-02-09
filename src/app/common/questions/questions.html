@@ -5,12 +5,16 @@
             on-nav-click="$ctrl.navTo($event)">
     </nav>
 
-    <timer></timer>
+    <div class="row">
 
-    <questions-list   question="$ctrl.questionsListQuestion"
-                      on-radio-changed="$ctrl.changeSelected($event)">
-    </questions-list>
+        <timer></timer>
 
-    <questions-ribbon indexes="$ctrl.ribbonIndexes"></questions-ribbon>
+        <questions-list   question="$ctrl.questionsListQuestion"
+                          on-radio-changed="$ctrl.changeSelected($event)">
+        </questions-list>
+
+        <questions-ribbon indexes="$ctrl.ribbonIndexes"></questions-ribbon>
+
+    </div>
 
 </div>
