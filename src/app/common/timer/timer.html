@@ -2,7 +2,7 @@
 
     <div class="timercontainer">
         <div class="time">
-            <span class="time__display">{{$ctrl.min}}:{{$ctrl.sec}}</span>
+            <span class="time__display" ng-class="{'zerored':$ctrl.hasReachZero}">{{$ctrl.min}}:{{$ctrl.sec}}</span>
         </div>
         <div class="caption">
             <span class="caption__text">QUIZ TIMER</span>
