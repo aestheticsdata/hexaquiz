@@ -12,27 +12,27 @@ angular
                 redirectTo: 'questions',
                 url: '/app',
                 resolve : {
-                    // questions: function (QuestionsService, $log, hlg) {
-                    //     hlg.l('red',10,'resolve questions');
-                    //     hlg.l('green',2,'resolve questions', QuestionsService.questions);
-                    //     if (QuestionsService.questions.length === 0) {
-                    //         return QuestionsService.retrieveQuestions()
-                    //             .then(
-                    //                 function onSuccess(res) {
-                    //                     $log.debug(res);
-                    //                     QuestionsService.setQuestions(res);
-                    //                     return QuestionsService.questions;
-                    //                 }
-                    //             )
-                    //             .catch(
-                    //                 function onError(err) {
-                    //                     $log.debug('error while retrieving questions : ', err);
-                    //                 }
-                    //             )
-                    //     } else {
-                    //         return QuestionsService.questions;
-                    //     }
-                    // }
+                    questions: function (QuestionsService, $log, hlg) {
+                        hlg.l('red',10,'resolve questions');
+                        hlg.l('green',2,'resolve questions', QuestionsService.questions);
+                        if (QuestionsService.questions.length === 0) {
+                            return QuestionsService.retrieveQuestions()
+                                .then(
+                                    function onSuccess(res) {
+                                        $log.debug(res);
+                                        QuestionsService.setQuestions(res);
+                                        return QuestionsService.questions;
+                                    }
+                                )
+                                .catch(
+                                    function onError(err) {
+                                        $log.debug('error while retrieving questions : ', err);
+                                    }
+                                )
+                        } else {
+                            return QuestionsService.questions;
+                        }
+                    }
                 },
                 data: {
                     requiredAuth: true
