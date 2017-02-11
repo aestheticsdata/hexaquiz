@@ -14,9 +14,6 @@ function HeaderBarController(AuthService, TimerService, $state, $log) {
 
     ctrl.logout = function () {
         $log.debug('log out from header bar');
-        $log.debug('TimerService.count : ', TimerService.count);
-        TimerService.initCounter(22);
-        $log.debug('TimerService.count after reinit : ', TimerService.count);
         AuthService.logout().then(function () {
             ctrl.onToggleLoggedOutBtn({
                 $event: {

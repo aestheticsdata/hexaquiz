@@ -15,7 +15,7 @@ function TimerService(GLOBAL_CONFIG, $interval, $window, $log, hlg) {
 
     return timerservice;
 
-    function _initCounter(v) {
+    function _initCounter() {
         $interval.cancel(timerservice.timer);
         timerservice.timer = null;
         timerservice.count = GLOBAL_CONFIG.TIMER_COUNT;
@@ -55,7 +55,7 @@ function TimerService(GLOBAL_CONFIG, $interval, $window, $log, hlg) {
             min : (timerservice.tempMin < 10) ? '0' + timerservice.tempMin : timerservice.tempMin,
             sec : (timerservice.tempSec < 10) ? '0' + timerservice.tempSec : timerservice.tempSec
         };
-        hlg.l('grey', 7, 'timer service / ', display.min + ':' + display.sec);
+        // hlg.l('grey', 7, 'timer service / ', display.min + ':' + display.sec);
         return display;
     }
 }

@@ -1,4 +1,4 @@
-function RootController($log) {
+function RootController($log, TimerService) {
     var ctrl = this;
 
     ctrl.$onInit = function () {
@@ -14,6 +14,7 @@ function RootController($log) {
 
         ctrl.displayLogOutButton = function (e) {
             ctrl.loggedIn = e.loggedIn;
+            TimerService.initCounter();
         };
 
         ctrl.displayUserName = function (e) {
