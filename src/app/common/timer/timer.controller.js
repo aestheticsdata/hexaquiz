@@ -6,7 +6,7 @@ function TimerController($interval, $log, hlg, TimerService) {
     ctrl.$onInit = function () {
         $log.debug('TimerController');
 
-        ctrl.hasReachZero = false;
+        ctrl.hasReachZero = false; // see the template, turn timer to red
 
         updateTimerFromService();
 
@@ -25,7 +25,8 @@ function TimerController($interval, $log, hlg, TimerService) {
         ctrl.sec = TimerService.displayTime().sec;
         if(ctrl.min == '00' && ctrl.sec == '00') {
             $log.debug('has reach zero');
-            ctrl.hasReachZero = true;
+            ctrl.hasReachZero = true; // see the template, turn timer to red
+            $interval.cancel(ctrlTimer);
         }
     }
 }

@@ -1,12 +1,13 @@
-function TimerService($interval, $window, $log, hlg) {
+function TimerService(GLOBAL_CONFIG, $interval, $window, $log, hlg) {
     var timerservice = {
-        count   : 72, // number of seconds
+        count   : GLOBAL_CONFIG.TIMER_COUNT, // number of seconds
         tempMin : 0,
         tempSec : 0,
         timer   : null,
         getTimerUpdate : _getTimerUpdate,
         updateTimer    : _updateTimer,
-        displayTime    : _displayTime
+        displayTime    : _displayTime,
+        initCounter    : _initCounter
     };
 
     timerservice.tempMin = Math.floor(timerservice.count / 60) % 60;
@@ -14,12 +15,18 @@ function TimerService($interval, $window, $log, hlg) {
 
     return timerservice;
 
+    function _initCounter(v) {
+        $interval.cancel(timerservice.timer);
+        timerservice.timer = null;
+        timerservice.count = GLOBAL_CONFIG.TIMER_COUNT;
+        timerservice.tempMin = Math.floor(timerservice.count / 60) % 60;
+        timerservice.tempSec = timerservice.count%60;
+    }
 
     function _getTimerUpdate() {
+        $log.debug('999', timerservice.timer);
         if (!timerservice.timer) {
             timerservice.timer = $interval(timerservice.updateTimer, 1000);
-        } else {
-
         }
     }
 
@@ -48,6 +55,7 @@ function TimerService($interval, $window, $log, hlg) {
             min : (timerservice.tempMin < 10) ? '0' + timerservice.tempMin : timerservice.tempMin,
             sec : (timerservice.tempSec < 10) ? '0' + timerservice.tempSec : timerservice.tempSec
         };
+        hlg.l('grey', 7, 'timer service / ', display.min + ':' + display.sec);
         return display;
     }
 }
