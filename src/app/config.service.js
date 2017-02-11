@@ -1,6 +1,6 @@
 function config($log, hlg) {
     var config = {
-        TIMER_COUNT: 25 // number of seconds
+        TIMER_COUNT: 9 // number of seconds
     };
 
     return config;

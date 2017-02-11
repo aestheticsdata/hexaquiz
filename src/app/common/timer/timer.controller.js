@@ -1,4 +1,4 @@
-function TimerController($interval, $log, hlg, TimerService) {
+function TimerController($interval, $log, hlg, TimerService, $uibModal) {
     var ctrl = this,
         ctrlTimer = null;
 
@@ -27,6 +27,17 @@ function TimerController($interval, $log, hlg, TimerService) {
             $log.debug('has reach zero');
             ctrl.hasReachZero = true; // see the template, turn timer to red
             $interval.cancel(ctrlTimer);
+            $uibModal.open({
+                component: 'warning',
+                resolve: {
+                    message: function () {
+                        return 'time out';
+                    },
+                    action: function () {
+                        return 'score';
+                    }
+                }
+            });
         }
     }
 }

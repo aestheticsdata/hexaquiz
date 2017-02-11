@@ -1,4 +1,4 @@
-function WarningModalController($log, hlg) {
+function WarningModalController($log, hlg, $state, $uibModalStack) {
     var ctrl = this;
 
     ctrl.$onInit = function () {
@@ -6,7 +6,13 @@ function WarningModalController($log, hlg) {
 
         ctrl.ok = function () {
             ctrl.close();
+            if (ctrl.resolve.action === 'score') {
+                $uibModalStack.dismissAll();
+                $state.go('score');
+            }
         };
+
+        ctrl.message = ctrl.resolve.message;
     };
 
 }

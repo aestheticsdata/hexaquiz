@@ -35,7 +35,12 @@ function QuestionsController($state, QuestionsService, ScoreService, $uibModal, 
                         }
                         if (!answered) {
                             $uibModal.open({
-                                template:'<warning message="All questions must be answered" close="$close()"></warning>'
+                                component: 'warning',
+                                resolve: {
+                                    message: function () {
+                                        return 'All questions must be answered';
+                                    }
+                                }
                             });
                         } else {
                             ScoreService.setScore();

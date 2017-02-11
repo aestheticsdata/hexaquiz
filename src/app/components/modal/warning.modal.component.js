@@ -1,9 +1,10 @@
 var warning = {
     templateUrl:'./warning.html',
     bindings: {
-        message: '@',
+        // message: '@',
         close: '&',
-        dismiss:'&'
+        // dismiss:'&',
+        resolve: '<'
     },
     controller: 'WarningModalController'
 };

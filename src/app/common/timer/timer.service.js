@@ -24,7 +24,6 @@ function TimerService(GLOBAL_CONFIG, $interval, $window, $log, hlg) {
     }
 
     function _getTimerUpdate() {
-        $log.debug('999', timerservice.timer);
         if (!timerservice.timer) {
             timerservice.timer = $interval(timerservice.updateTimer, 1000);
         }
