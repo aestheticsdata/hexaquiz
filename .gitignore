@@ -8,3 +8,4 @@ src/app/components/auth/auth.service-config.js
 /dist/css
 
 /templates.js
+/.DS_Store
