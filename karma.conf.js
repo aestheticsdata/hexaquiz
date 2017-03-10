@@ -15,11 +15,31 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+        'node_modules/angular/angular.js',
+        'node_modules/angular-ui-router/release/angular-ui-router.js',
+        'node_modules/angular-loading-bar/build/loading-bar.min.js',
+        'node_modules/angular-animate/angular-animate.min.js',
+        'node_modules/angular-mocks/angular-mocks.js',
+        // 'node_modules/firebase/firebase.js',
+        // 'node_modules/angularfire/dist/angularfire.js',
+        'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+        'mocks/firebase.mock.js',
+        // 'src/app/root.module.js',
+        // 'src/app/**/*',
+        'src/app/**/*.spec.js',
+        'dist/js/bundle.js',
     ],
 
 
     // list of files to exclude
     exclude: [
+    ],
+
+    plugins: [
+        require('karma-jasmine'),
+        require('karma-chrome-launcher'),
+        require('karma-phantomjs-launcher'),
+        require('karma-spec-reporter')
     ],
 
 
@@ -32,7 +52,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['spec'],
 
 
     // web server port
@@ -65,4 +85,4 @@ module.exports = function(config) {
     // how many browser should be started simultaneous
     concurrency: Infinity
   })
-}
+};

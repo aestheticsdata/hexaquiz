@@ -18,7 +18,7 @@ import sourcemaps    from 'gulp-sourcemaps';
 
 
 
-const srcpath = 'src/';
+const srcpath = 'src';
 const argv = yargs.argv;
 const paths = {
     dist: './dist/',
@@ -27,7 +27,7 @@ const paths = {
                 'node_modules/angular-loading-bar/build/loading-bar.css'
                ],
     bootstrap: 'node_modules/bootstrap/dist/**/*',
-    scripts:   `${srcpath}/app/**/*.js`,
+    scripts:   [`${srcpath}/app/**/*.js`, `!${srcpath}/app/**/*.spec.js`],
     templates: `${srcpath}/app/**/*.html`,
     modules: [
         'angular/angular.js',
@@ -91,8 +91,9 @@ gulp.task('styles', () => {
 
 gulp.task('scripts', ['modules'], () => {
     return gulp.src([
+        `!${srcpath}/app/**/*.spec.js`,
         `${srcpath}/app/**/*.module.js`,
-        paths.scripts,
+        ...paths.scripts,
         './templates.js'
     ])
         .pipe(babel({
