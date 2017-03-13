@@ -5,7 +5,6 @@ describe('Root component', function () {
     beforeEach(function () {
         module('firebase');
         module('hexaquiz');
-        module('hexaquiz.common.timer');
     });
 
 
