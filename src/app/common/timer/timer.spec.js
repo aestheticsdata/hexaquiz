@@ -16,4 +16,16 @@ describe('Timer Service', function () {
         expect(ts).toBeDefined();
     });
 
+    it('has a count var', function () {
+        expect(ts.count).toBeDefined();
+    });
+
+    it('has a tempMin var', function () {
+        expect(ts.tempMin).toBeDefined();
+    });
+
+    it('has a tempSec var', function () {
+        expect(ts.tempSec).toBeDefined();
+    });
+
 });
