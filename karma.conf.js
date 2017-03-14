@@ -39,7 +39,8 @@ module.exports = function(config) {
         require('karma-jasmine'),
         require('karma-chrome-launcher'),
         require('karma-phantomjs-launcher'),
-        require('karma-spec-reporter')
+        require('karma-spec-reporter'),
+        require('karma-mocha-reporter')
     ],
 
 
@@ -50,9 +51,9 @@ module.exports = function(config) {
 
 
     // test results reporter to use
-    // possible values: 'dots', 'progress'
+    // possible values: 'dots', 'progress', 'spec', 'mocha'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['spec'],
+    reporters: ['mocha'],
 
 
     // web server port

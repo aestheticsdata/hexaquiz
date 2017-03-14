@@ -17,22 +17,25 @@ describe('Nav component', function () {
         spyOn(controller, 'onNavClick');
     });
 
-    it('should have a prev method', function () {
-        expect(controller.prev).toBeDefined();
+    describe('Nav controller', function () {
+        it('should have a prev method', function () {
+            expect(controller.prev).toBeDefined();
+        });
+
+        it('should have a next method', function () {
+            expect(controller.next).toBeDefined();
+        });
+
+        it('should call onNavClick with "prev" args', function () {
+            controller.prev();
+
+            expect(controller.onNavClick).toHaveBeenCalledWith({$event:{dir:'prev'}});
+        });
+
+        it('should call onNavClick with "next" args', function () {
+            controller.next();
+
+            expect(controller.onNavClick).toHaveBeenCalledWith({$event:{dir:'next'}});
+        });
     });
-
-    it('should have a next method', function () {
-        expect(controller.next).toBeDefined();
-    });
-
-    it('should call onNavClick with the correct args', function () {
-        controller.prev();
-
-        expect(controller.onNavClick).toHaveBeenCalledWith({$event:{dir:'prev'}});
-
-        controller.next();
-
-        expect(controller.onNavClick).toHaveBeenCalledWith({$event:{dir:'next'}});
-    });
-
 });
