@@ -17,7 +17,12 @@ describe('Nav component', function () {
         spyOn(controller, 'onNavClick');
     });
 
+
     describe('Nav controller', function () {
+        it('onNavClick should be defined', function () {
+            expect(controller.onNavClick).toEqual(jasmine.anything());
+        });
+
         it('should have a prev method', function () {
             expect(controller.prev).toBeDefined();
         });
@@ -28,13 +33,11 @@ describe('Nav component', function () {
 
         it('should call onNavClick with "prev" args', function () {
             controller.prev();
-
             expect(controller.onNavClick).toHaveBeenCalledWith({$event:{dir:'prev'}});
         });
 
         it('should call onNavClick with "next" args', function () {
             controller.next();
-
             expect(controller.onNavClick).toHaveBeenCalledWith({$event:{dir:'next'}});
         });
     });
