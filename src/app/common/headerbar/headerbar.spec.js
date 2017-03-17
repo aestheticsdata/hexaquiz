@@ -4,7 +4,14 @@ describe('HeaderBarController', function () {
         AuthService,
         onToggleLoggedOutBtnSpy,
         $rootScope,
-        $q;
+        $q,
+        $state;
+
+    function logoutHelper() {
+        controller.logout();
+        $rootScope.$digest();
+        expect(AuthService.logout).toHaveBeenCalled();
+    }
 
     beforeEach(function () {
         module('hexaquiz');
@@ -17,6 +24,7 @@ describe('HeaderBarController', function () {
             AuthService = $injector.get('AuthService');
             $rootScope = $injector.get('$rootScope');
             $q = $injector.get('$q');
+            $state = $injector.get('$state');
         });
 
         onToggleLoggedOutBtnSpy = jasmine.createSpy('onToggleLoggedOutBtn');
@@ -28,6 +36,14 @@ describe('HeaderBarController', function () {
 
     });
 
+    beforeEach(function () {
+        spyOn(AuthService, 'logout').and.callFake(function () {
+            var deferred = $q.defer();
+            deferred.resolve();
+            return deferred.promise;
+        });
+    });
+
     it('AuthService should have a logout method', function () {
         expect(AuthService.logout).toBeDefined();
     });
@@ -37,16 +53,13 @@ describe('HeaderBarController', function () {
     });
 
     it('should call onToggleLoggedOutBtn when logged out', function () {
-        spyOn(AuthService, 'logout').and.callFake(function () {
-            var deferred = $q.defer();
-            deferred.resolve();
-            return deferred.promise;
-        });
-
-        controller.logout();
-        $rootScope.$digest();
-
-        expect(AuthService.logout).toHaveBeenCalled();
+        logoutHelper();
         expect(onToggleLoggedOutBtnSpy).toHaveBeenCalled();
+    });
+
+    it('should go to the login state on logout', function () {
+        spyOn($state, 'go').and.callThrough();
+        logoutHelper();
+        expect($state.go).toHaveBeenCalledWith('login');
     });
 });
