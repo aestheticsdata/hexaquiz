@@ -31,7 +31,10 @@ describe('HeaderBarController', function () {
 
         controller = $componentController('headerBar',
             null,
-            {onToggleLoggedOutBtn: onToggleLoggedOutBtnSpy}
+            {
+                onToggleLoggedOutBtn: onToggleLoggedOutBtnSpy,
+                loggedIn: false
+            }
         );
 
     });
@@ -52,9 +55,10 @@ describe('HeaderBarController', function () {
         expect(controller.logout).toBeDefined();
     });
 
-    it('should call onToggleLoggedOutBtn when logged out', function () {
+    it('should call onToggleLoggedOutBtn when logged out with the correct payload', function () {
+        var payload = {$event:{loggedIn: false }};
         logoutHelper();
-        expect(onToggleLoggedOutBtnSpy).toHaveBeenCalled();
+        expect(onToggleLoggedOutBtnSpy).toHaveBeenCalledWith(payload);
     });
 
     it('should go to the login state on logout', function () {
