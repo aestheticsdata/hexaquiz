@@ -66,4 +66,8 @@ describe('HeaderBarController', function () {
         logoutHelper();
         expect($state.go).toHaveBeenCalledWith('login');
     });
+
+    it('should have an $onChange method', function () {
+        expect(controller.$onChanges).toBeDefined();
+    })
 });
