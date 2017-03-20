@@ -9,7 +9,7 @@ describe('HeaderBarController', function () {
 
     function logoutHelper() {
         controller.logout();
-        $rootScope.$digest();
+        $rootScope.$digest(); // any promises made with the $q service to be resolved/rejected are processed upon each run of angular’s digest cycle
         expect(AuthService.logout).toHaveBeenCalled();
     }
 
