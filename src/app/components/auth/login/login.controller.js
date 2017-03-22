@@ -6,6 +6,8 @@ function LoginController(TextService, AuthService, cfpLoadingBar, $state, AppSta
         $log.debug('LoginController');
         $log.debug('ctrl : ', ctrl);
 
+        ctrl.errorMessage = null;
+
         ctrl.text = {
             signin : TextService.login.signin,
             reset  : TextService.login.reset
