@@ -68,6 +68,14 @@ describe('Login', function () {
             });
         }));
 
+        it('should have a text.sigin property', function () {
+            expect(controller.text.signin).toBeDefined();
+        });
+
+        it('should have a text.reset property', function () {
+            expect(controller.text.reset).toBeDefined();
+        });
+
         it('cfpLoadingBar should be complete()', function () {
             spyOn(cfpLoadingBar, 'complete');
             promise = controller.loginUser(mockEvent);
