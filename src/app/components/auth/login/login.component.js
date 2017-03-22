@@ -34,6 +34,4 @@ angular
             // https://github.com/angular-ui/ui-router/issues/3277
         // $urlServiceProvider.rules.otherwise('/auth/login'); // entry point of the app
         $urlServiceProvider.rules.otherwise('/login'); // entry point of the app
-
-        // TimerServiceProvider.count = 75;
     });
