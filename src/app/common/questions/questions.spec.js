@@ -60,4 +60,28 @@ describe('Questions', function () {
             expect(qs.currentAnswers).toEqual([-1,-1,-1]);
         });
     });
+
+    describe('Controller', function () {
+        var $componentController,
+            controller,
+            transitionAliasMock = {
+                params : function () {
+                    return {idx:angular.noop}
+                }
+            };
+
+        beforeEach(inject(function ($injector) {
+            $componentController = $injector.get('$componentController');
+            controller = $componentController('questions',
+                null,
+                {questions:[], transitionAlias:transitionAliasMock}
+            );
+            controller.$onInit();
+        }));
+
+        it('should have a currentIndex property', function () {
+            console.log(controller);
+            expect(controller.currentIndex).toBeDefined();
+        });
+    })
 });

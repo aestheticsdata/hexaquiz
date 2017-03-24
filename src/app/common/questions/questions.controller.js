@@ -1,8 +1,8 @@
 function QuestionsController($state, QuestionsService, ScoreService, $uibModal, $document, hlg, $log) {
 
     var ctrl = this,
-        currentIndex = -1,
-        questionsLength = -1;
+        currentIndex = ctrl.currentIndex = -1, // double equality needed for unit test
+        questionsLength = ctrl.questionsLength = -1; // double equality needed for unit test
 
     ctrl.$onInit = function () {
 
