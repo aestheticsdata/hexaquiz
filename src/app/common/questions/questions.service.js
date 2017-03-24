@@ -3,7 +3,7 @@
 angular.module('hexaquiz.common.questions').factory('QuestionsService', QuestionsService);
 
 
-function QuestionsService($http, $firebaseObject, $log, hlg) {
+function QuestionsService($firebaseObject, $log, hlg) {
 
     var qs = {
         questions          : [],

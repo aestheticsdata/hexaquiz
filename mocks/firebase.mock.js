@@ -48,7 +48,7 @@ angular
                   console.log('ref');
               }
           };
-      }
+      };
 
     return function () {
       return new FirebaseObject();
