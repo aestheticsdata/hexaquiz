@@ -11,7 +11,6 @@ function QuestionsService($firebaseObject, $log, hlg) {
         initCurrentAnswers : _initCurrentAnswers,
         retrieveQuestions  : _retrieveQuestions,
         setQuestions       : _setQuestions,
-        getQuestions       : _getQuestions,
         ref                : firebase.database().ref(),
     };
 
@@ -53,11 +52,5 @@ function QuestionsService($firebaseObject, $log, hlg) {
             qs.currentAnswers.push(-1); // -1 is a flag to check if a radio button has been changed
         }
         // hlg.l('blue', Math.ceil(Math.random()*10), 'kkk', qs.currentAnswers);
-    }
-
-
-    function _getQuestions(idx) {
-
-        return idx ? qs.questions[idx] : qs.questions;
     }
 }

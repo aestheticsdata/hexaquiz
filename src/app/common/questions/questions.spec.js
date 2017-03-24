@@ -11,11 +11,13 @@ describe('Questions', function () {
 
     beforeEach(inject(function ($injector) {
         qs = $injector.get('QuestionsService');
+    }));
 
+    beforeEach(function () {
         spyOn(qs, 'setQuestions').and.callFake(function () {
             qs.questions = questions;
         });
-    }));
+    });
 
     describe('Service', function () {
         it('question service should exist', function () {
