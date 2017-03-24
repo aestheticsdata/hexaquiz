@@ -15,7 +15,6 @@ angular
                 return !!(state.data && state.data.requiredAuth);
             }
         }, function() {
-            $log.debug('777');
             return AuthService
                 .requireAuthentication()
                 .catch(function () {
@@ -28,7 +27,6 @@ angular
             // to: 'auth.*'
             to: 'login'
         }, function () {
-            $log.debug('888');
             if (AuthService.isAuthenticated()) {
                 return $state.target('app');
             }

@@ -71,7 +71,7 @@ describe('Login', function () {
                 });
             });
 
-            it('should have a text.sigin property', function () {
+            it('should have a text.signin property', function () {
                 expect(controller.text.signin).toBeDefined();
             });
 

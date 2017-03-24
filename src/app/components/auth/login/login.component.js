@@ -12,7 +12,7 @@ var login = {
 angular
     .module('hexaquiz.components.auth')
     .component('login', login)
-    .config(function ($stateProvider, $urlServiceProvider, TimerServiceProvider) {
+    .config(function ($stateProvider, $urlServiceProvider) {
         $stateProvider
             .state('auth', {
                 redirectTo: 'auth.login',
