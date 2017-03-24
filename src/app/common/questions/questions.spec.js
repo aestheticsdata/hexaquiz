@@ -19,6 +19,7 @@ describe('Questions', function () {
         });
     });
 
+
     describe('Service', function () {
         it('question service should exist', function () {
             expect(qs).toBeDefined();
@@ -34,17 +35,16 @@ describe('Questions', function () {
         it('retrieveQuestions() should exist', function () {
             expect(qs.retrieveQuestions).toBeDefined();
         });
+
         it('setQuestions() should exist', function () {
             expect(qs.setQuestions).toBeDefined();
-        });
-        it('getQuestions() should exist', function () {
-            expect(qs.getQuestions).toBeDefined();
         });
 
         it('has a questions array', function () {
             var questions = [];
             expect(qs.questions).toEqual(jasmine.arrayContaining(questions));
         });
+
         it('has a currentAnswers array', function () {
             var currentAnswers = [];
             expect(qs.currentAnswers).toEqual(jasmine.arrayContaining(currentAnswers));
@@ -59,5 +59,5 @@ describe('Questions', function () {
             qs.initCurrentAnswers();
             expect(qs.currentAnswers).toEqual([-1,-1,-1]);
         });
-    })
+    });
 });
