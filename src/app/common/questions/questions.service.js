@@ -48,7 +48,7 @@ function QuestionsService($firebaseObject, $log, hlg) {
         // without being reinitialized
         qs.currentAnswers = [];
         ///////////////////////////////////////////////////////////////
-
+        // hlg.l('green', 12, 'qs.questions', qs.questions);
         for (var i=0, questionslength=qs.questions.length; i<questionslength; i++) {
             qs.currentAnswers.push(-1); // -1 is a flag to check if a radio button has been changed
         }

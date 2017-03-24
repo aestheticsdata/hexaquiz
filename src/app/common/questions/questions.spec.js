@@ -1,12 +1,20 @@
 describe('Questions', function () {
-    var qs, firebase;
+    var qs,
+        questions = [
+            {choices:['blue', 'red', 'green'], correctAnswer:2, question:"what is it ?"},
+            {choices:['yes', 'no'], correctAnswer:0, question:"is it cool ?"},
+            {choices:['cheddar', 'gouda'], correctAnswer:0, question:"english cheese ?"}
+        ];
 
-    beforeEach(module('firebase')); // use firebase.mock.js
+    // beforeEach(module('firebase')); // use firebase.mock.js
     beforeEach(module('hexaquiz'));
 
     beforeEach(inject(function ($injector) {
         qs = $injector.get('QuestionsService');
-        firebase = $injector.get('$firebaseObject');
+
+        spyOn(qs, 'setQuestions').and.callFake(function () {
+            qs.questions = questions;
+        });
     }));
 
     describe('Service', function () {
@@ -15,16 +23,20 @@ describe('Questions', function () {
         });
 
         it('initCurrentAnswers() should exist', function () {
-            expect('qs.initCurrentAnswers').toBeDefined();
+            expect(qs.initCurrentAnswers).toBeDefined();
         });
+        it('initCurrentAnswers() should empty the currentAnswers array', function () {
+            expect(qs.currentAnswers.length).toEqual(0);
+        });
+
         it('retrieveQuestions() should exist', function () {
-            expect('qs.retrieveQuestions').toBeDefined();
+            expect(qs.retrieveQuestions).toBeDefined();
         });
         it('setQuestions() should exist', function () {
-            expect('qs.setQuestions').toBeDefined();
+            expect(qs.setQuestions).toBeDefined();
         });
         it('getQuestions() should exist', function () {
-            expect('qs.getQuestions').toBeDefined();
+            expect(qs.getQuestions).toBeDefined();
         });
 
         it('has a questions array', function () {
@@ -38,6 +50,12 @@ describe('Questions', function () {
 
         it('has a firebase ref to the database', function () {
             expect(qs.ref).not.toBeNull();
+        });
+
+        it('currentAnswers should be init to -1 in initCurrentAnswers()', function () {
+            qs.setQuestions();
+            qs.initCurrentAnswers();
+            expect(qs.currentAnswers).toEqual([-1,-1,-1]);
         });
     })
 });

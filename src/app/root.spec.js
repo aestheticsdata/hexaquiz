@@ -3,7 +3,7 @@ describe('Root component', function () {
     var $componentController, controller, timerService;
 
     beforeEach(function () {
-        module('firebase'); // use firebase.mock.js
+        // module('firebase'); // use firebase.mock.js
         module('hexaquiz');
     });
 
