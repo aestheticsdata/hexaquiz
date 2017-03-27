@@ -1,10 +1,14 @@
 describe('Questions', function () {
     var qs,
-        questions = [
-            {choices:['blue', 'red', 'green'], correctAnswer:2, question:"what is it ?"},
-            {choices:['yes', 'no'], correctAnswer:0, question:"is it cool ?"},
-            {choices:['cheddar', 'gouda'], correctAnswer:0, question:"english cheese ?"}
-        ];
+        questions =  {
+            'a': {choices:['blue', 'red', 'green'], correctAnswer:2, question:"what is it ?"},
+            'b': {choices:['yes', 'no'], correctAnswer:0, question:"is it cool ?"},
+            'c': {choices:['cheddar', 'gouda'], correctAnswer:0, question:"english cheese ?"}
+        },
+        data = {
+            questions: questions
+        };
+
 
     // beforeEach(module('firebase')); // use firebase.mock.js
     beforeEach(module('hexaquiz'));
@@ -14,9 +18,7 @@ describe('Questions', function () {
     }));
 
     beforeEach(function () {
-        spyOn(qs, 'setQuestions').and.callFake(function () {
-            qs.questions = questions;
-        });
+        spyOn(qs, 'setQuestions').and.callThrough();
     });
 
 
@@ -55,8 +57,7 @@ describe('Questions', function () {
         });
 
         it('currentAnswers should be init to -1 in initCurrentAnswers()', function () {
-            qs.setQuestions();
-            qs.initCurrentAnswers();
+            qs.setQuestions(data);
             expect(qs.currentAnswers).toEqual([-1,-1,-1]);
         });
     });
@@ -64,24 +65,47 @@ describe('Questions', function () {
     describe('Controller', function () {
         var $componentController,
             controller,
+            $state,
+            $location,
+            $rootScope,
             transitionAliasMock = {
                 params : function () {
-                    return {idx:angular.noop}
+                    return {idx:-1}; // -1 match currentIndex in controller
                 }
             };
 
+        function goTo(url) {
+            $location.url(url);
+            $rootScope.$digest();
+        }
+
         beforeEach(inject(function ($injector) {
+            $state = $injector.get('$state');
+            $location = $injector.get('$location');
+            $rootScope = $injector.get('$rootScope');
             $componentController = $injector.get('$componentController');
             controller = $componentController('questions',
-                null,
-                {questions:[], transitionAlias:transitionAliasMock}
+                null ,
+                {questions:[], transitionAlias:transitionAliasMock, questions:R.values(data.questions)} // R.values comes from Ramda.js lib
             );
             controller.$onInit();
         }));
 
         it('should have a currentIndex property', function () {
-            console.log(controller);
             expect(controller.currentIndex).toBeDefined();
+        });
+
+        it('should go to the next question calling navTo with "next"', function () {
+            var payload = {
+                idx:parseInt(controller.currentIndex)+1
+            };
+
+            qs.setQuestions(data);
+            spyOn($state, 'go');
+            controller.navTo({dir:'next'});
+            $rootScope.$digest();
+
+            expect($state.go).toHaveBeenCalledWith('questions', payload);
         });
     })
 });
