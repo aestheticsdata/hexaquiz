@@ -3,12 +3,13 @@ describe('Questions', function () {
         questions =  {
             'a': {choices:['blue', 'red', 'green'], correctAnswer:2, question:"what is it ?"},
             'b': {choices:['yes', 'no'], correctAnswer:0, question:"is it cool ?"},
-            'c': {choices:['cheddar', 'gouda'], correctAnswer:0, question:"english cheese ?"}
+            'c': {choices:['cheddar', 'gouda'], correctAnswer:0, question:"english cheese ?"},
+            'd': {choices:['cheddar', 'gouda'], correctAnswer:0, question:"english cheese ?"}
         },
         data = {
             questions: questions
         },
-        controllerCurrentIndex = 3;
+        controllerCurrentIndex = 2;
 
 
     // beforeEach(module('firebase')); // use firebase.mock.js
@@ -58,8 +59,15 @@ describe('Questions', function () {
         });
 
         it('currentAnswers should be init to -1 in initCurrentAnswers()', function () {
+            var currentAnswersMock = (function () {
+                var arr = [];
+                for (var i=0, l=(R.values(data.questions)).length; i<l; i++) {
+                    arr.push(-1);
+                }
+                return arr;
+            })();
             qs.setQuestions(data);
-            expect(qs.currentAnswers).toEqual([-1,-1,-1]);
+            expect(qs.currentAnswers).toEqual(currentAnswersMock);
         });
     });
 
@@ -123,6 +131,8 @@ describe('Questions', function () {
             expect($state.go).toHaveBeenCalledWith('questions', payload);
         });
 
-        
+        it('should go to the score state', function () {
+
+        });
     })
 });
