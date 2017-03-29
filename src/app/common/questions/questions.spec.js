@@ -7,7 +7,8 @@ describe('Questions', function () {
         },
         data = {
             questions: questions
-        };
+        },
+        controllerCurrentIndex = 3;
 
 
     // beforeEach(module('firebase')); // use firebase.mock.js
@@ -70,7 +71,7 @@ describe('Questions', function () {
             $rootScope,
             transitionAliasMock = {
                 params : function () {
-                    return {idx:-1}; // -1 match currentIndex in controller
+                    return {idx:controllerCurrentIndex}; // -1 match currentIndex in controller
                 }
             };
 
@@ -97,8 +98,9 @@ describe('Questions', function () {
 
         it('should go to the next question calling navTo with "next"', function () {
             var payload = {
-                idx:parseInt(controller.currentIndex)+1
+                idx:parseInt(controllerCurrentIndex)+1
             };
+
 
             qs.setQuestions(data);
             spyOn($state, 'go');
@@ -107,5 +109,20 @@ describe('Questions', function () {
 
             expect($state.go).toHaveBeenCalledWith('questions', payload);
         });
+
+        it('should go to the previous question calling navTo with "prev"', function () {
+            var payload = {
+                idx:parseInt(controllerCurrentIndex)-1
+            };
+
+            qs.setQuestions(data);
+            spyOn($state, 'go');
+            controller.navTo({dir:'prev'});
+            $rootScope.$digest();
+
+            expect($state.go).toHaveBeenCalledWith('questions', payload);
+        });
+
+        
     })
 });
