@@ -130,9 +130,5 @@ describe('Questions', function () {
 
             expect($state.go).toHaveBeenCalledWith('questions', payload);
         });
-
-        it('should go to the score state', function () {
-
-        });
-    })
+    });
 });
